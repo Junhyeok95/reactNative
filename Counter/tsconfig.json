@@ -6,6 +6,9 @@
         "isolatedModules": true,
         "jsx": "react",
         "lib": ["ES6"],
+        "moduleResolution": "node",
+        "noEmit": true,
+        "strict": true,
         "target": "esnext",
         "baseUrl": "./src",
         "paths": {
