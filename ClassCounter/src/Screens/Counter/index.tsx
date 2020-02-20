@@ -35,33 +35,50 @@ const ButtonContainer = Styled.View`
 `;
 
 interface Props {
-    title?: string; // 필수 항목은 아니다
-    initValue: number; // : 필수항목
+    title?: string;
+    initValue: number;
 }
 
-// useState 를 사용하는 방법 ...
-// 직접 변경하면서 발생할 수 있는 오류를 줄이고 리액트의 가상 돔을 활용하여 변경된 부분만 화면을 갱신하기 위해서이다
-// !!! const [변수명, 변수를 변경할 set 함수] = useState<State의 타입>(초기값);
+interface State {
+    count: number;
+}
 
-const Counter = ({ title, initValue }: Props) => {
-    const [count, setCount] = useState<number>(0);
+class Counter extends React.Component<Props, State>{
+    constructor(props: Props) {
+        super(props);
+        console.log('constructor');
 
-    return (
-        <Container>
-            {title && (
-                <TitleContainer>
-                    <TitleLabel>{title}</TitleLabel>
-                </TitleContainer>
-            )}
-            <CountContainer>
-                <CountLabel>{initValue + count}</CountLabel>
-            </CountContainer>
-            <ButtonContainer>
-                <Button iconName="plus" onPress={() => setCount(count + 1)}/>
-                <Button iconName="minus" onPress={() => setCount(count - 1)}/>
-            </ButtonContainer>
-        </Container>
-    )
+        this.state = {
+            count: props.initValue,
+        };
+    }
+
+    render() {
+        const { title } = this.props;
+        const { count } = this.state;
+        return (
+            <Container>
+                {title && (
+                    <TitleContainer>
+                        <TitleLabel>{title}</TitleLabel>
+                    </TitleContainer>
+                )}
+                <CountContainer>
+                    <CountLabel>{count}</CountLabel>
+                </CountContainer>
+                <ButtonContainer>
+                    <Button
+                        iconName="plus"
+                        onPress={() => this.setState({ count: count + 1})}
+                    />
+                    <Button
+                        iconName="minus"
+                        onPress={() => this.setState({ count: count + 1})}
+                    />
+                </ButtonContainer>
+            </Container>
+        );
+    }
 }
 
 export default Counter;
