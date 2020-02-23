@@ -17,20 +17,23 @@ const TodoList = ({  }: Props) => {
     );
 
     return (
-    <Container
-        data={todoList}
-        keyExtractor={(item, index) => {
-            return `todo-${index}`;
-        }}
-        ListEmptyComponent={<EmptyItem />}
-        renderItem={({ item, index }) => (
-            <TodoItem
-                text={item as string}
-                onDelete={() => removeTodoList(index)}
-            />
-        )}
-        contentContainerStyle={todoList.length === 0 && { flex: 1 }}
-    />
+
+        // 리액트 네이티브의 리스트 뷰 중 하나인 FlatList 컴포넌트를 사용
+
+        <Container
+            data={todoList}
+            keyExtractor={(item, index) => {
+                return `todo-${index}`;
+            }}
+            ListEmptyComponent={<EmptyItem />}
+            renderItem={({ item, index }) => (
+                <TodoItem
+                    text={item as string}
+                    onDelete={() => removeTodoList(index)}
+                />
+            )}
+            contentContainerStyle={todoList.length === 0 && { flex: 1 }}
+        />
     );
 };
 

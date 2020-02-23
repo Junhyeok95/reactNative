@@ -17,6 +17,7 @@ const Header = ({  }: Props) => {
     return (
         <Container>
             <TitleLabel>Todo List App</TitleLabel>
+            <TitleLabel>투두 리스트 앱~!</TitleLabel>
         </Container>
     );
 };

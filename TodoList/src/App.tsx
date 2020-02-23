@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { StatusBar, SafeAreaView } from 'react-native';
+import React from 'react';
+import Styled from 'styled-components/native';
 
 import { TodoListContextProvider } from '~/Context/TodoListContext';
 
