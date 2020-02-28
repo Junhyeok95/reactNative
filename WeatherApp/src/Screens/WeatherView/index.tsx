@@ -43,6 +43,8 @@ const Temperature = Styled.Text`
     font-size: 16px;
 `;
 
+// Geolocation.getCurrentPosition(info => console.log(info));
+
 interface Props {}
 
 import MY_API_KEY from './MY_API_KEY';
