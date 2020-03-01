@@ -3,11 +3,11 @@ import {
     createStackNavigator,   // 영화 리스트 화면에서 상세 페이지
     createAppContainer,     // State, 링크 등을 관리
 } from 'react-navigation';
-  
+
 import CheckLogin from '~/Screens/CheckLogin';
 import Login from '~/Screens/Login';
 import MovieHome from '~/Screens/MovieHome';
-import MovieDetail from '~/Screens/MovieDetail'
+import MovieDetail from '~/Screens/MovieDetail';
 
 const LoginNavigator = createStackNavigator({
     Login,
@@ -30,3 +30,4 @@ const AppNavigator = createSwitchNavigator(
 );
 
 export default createAppContainer(AppNavigator);
+  
