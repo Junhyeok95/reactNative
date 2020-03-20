@@ -4,8 +4,10 @@ import Styled from 'styled-components/native';
 import SaveListView from './SaveListView';
 import AddSave from './AddSave';
 
-const Container = Styled.View`
+const Container = Styled.SafeAreaView`
     flex: 1;
+    background-color: rgba(45,45,150,0.3);
+
 `;
 
 interface Props {}

@@ -1,14 +1,10 @@
 import React, { Fragment } from 'react';
-import { StatusBar, SafeAreaView } from 'react-native';
 
 import { SaveListContextProvider } from '~/Context/SaveListContext';
 import Save from './Screens/Save';
+import Weather from './Screens/Weather';
 
 import Styled from 'styled-components/native';
-
-const ScrollView = Styled.ScrollView`
-  background-color: rgb(90,150,230);
-`;
 
 const Container = Styled.View`
   flex: 1;
@@ -22,6 +18,7 @@ const App = ( {}: Props ) => {
     <SaveListContextProvider>
       <Container>
         <Save/>
+        <Weather/>
       </Container>
     </SaveListContextProvider>
   );
