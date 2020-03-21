@@ -1,7 +1,6 @@
-color 68 101 132
-color 222 222 222
-
-color 140 211 197
+color 68 101 132  -> #446784 파란상단
+color 222 222 222 -> #DEDEDE 회색박스
+color 140 211 197 -> #8CD3C5 메인컬러
 
 error
 -------------------------------------
@@ -58,5 +57,11 @@ npm install --save-dev @bam.tech/react-native-make
 npm install -g yo generator-rn-toolbox
 brew install imagemagick
   yo rn-toolbox:assets --splash ./src/Assets/images/app_splash.psd
+
+npm install --save react-navigation react-native-gesture-handler react-native-reanimated
+npm install --save react-navigation-stack @react-native-community/masked-view
+npm install --save react-native-safe-area-context react-native-screens
+  cd ios
+  pod install
+
 -------------------------------------
-TestApp, icon splash
