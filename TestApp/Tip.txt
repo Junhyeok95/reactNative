@@ -1,3 +1,8 @@
+color 68 101 132
+color 222 222 222
+
+color 140 211 197
+
 error
 -------------------------------------
 rm -rf node_modules
@@ -45,4 +50,13 @@ npm install --save react-native-geolocation-service
   cd ios
   pod install
 
+npm install --save-dev @bam.tech/react-native-make
+  react-native set-icon --path ./src/Assets/images/app_icon.png --background "#FFFFFF"
+  cd ios
+  pod install
+
+npm install -g yo generator-rn-toolbox
+brew install imagemagick
+  yo rn-toolbox:assets --splash ./src/Assets/images/app_splash.psd
 -------------------------------------
+TestApp, icon splash
