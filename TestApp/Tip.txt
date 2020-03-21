@@ -1,0 +1,48 @@
+error
+-------------------------------------
+rm -rf node_modules
+watchman watch-del-all
+npm install
+pod install
+-------------------------------------
+
+clean
+-------------------------------------
+cd ios
+  xcodebuild clean
+  rm -rf ios/build
+  rm -rf ios/Pods
+
+cd android
+  ./gradlew clean
+  rm -rf android/build
+  rm -rf android/app/build
+  rm -rf android/.gradle
+
+rm -rf node_modules
+watchman watch-del-all
+npm cache clean
+-------------------------------------
+
+setup
+-------------------------------------
+npm install --save styled-components
+npm install --save-dev typescript @types/react @types/react-native @types/styled-components babel-plugin-root-import
+  tsconfig.json 설정
+  babel.config.js 설정
+
+npm install --save @react-native-community/async-storage
+  cd ios
+  pod install
+
+npm install --save react-native-geolocation-service
+    ios/[프로젝트 명]/info.plist 설정
+      NSLocationWhenInUseUsageDescription key 변경
+    ios/Podfile 설정
+      pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation' 추가
+    android/app/src/main/androidManifest.xml 설정
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 추가
+  cd ios
+  pod install
+
+-------------------------------------
