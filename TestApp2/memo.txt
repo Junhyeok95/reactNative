@@ -1,0 +1,41 @@
+# types, styled
+npm install --save styled-components
+npm install --save-dev typescript @types/react @types/react-native 
+                       @types/styled-components babel-plugin-root-import
+
+# tsconfig.json
+
+# babel.config.json
+
+# AsyncStorage
+npm install --save @react-native-community/async-storage
+
+# v5
+npm install --save @react-navigation/native
+npm install --save react-native-reanimated react-native-gesture-handler
+                   react-native-screens react-native-safe-area-context
+                   @react-native-community/masked-view
+npm install --save @react-navigation/stack
+npm install --save @react-navigation/drawer
+npm install --save @react-navigation/bottom-tabs
+
+  # Material Bottom Tab Navigation
+  npm install @react-navigation/material-bottom-tabs react-native-paper
+  npm install react-native-vector-icons --save
+  npm install --save-dev @types/react-native-vector-icons
+
+  # Material Top Tab Navigation
+  npm install @react-navigation/material-top-tabs react-native-tab-view
+
+# GPS main/AndroidManifest.xml, [AppName]/Info.plist
+npm install --save react-native-geolocation-service
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<key>NSLocationWhenInUseUsageDescription</key><string>GPS</string>
+  pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation'
+
+# icon, splash
+npm install -g yo generator-rn-toolbox
+brew install imagemagick
+  yo rn-toolbox:assets --icon ./src/Assets/Images/[icon.png] // 1024x1024 png
+  yo rn-toolbox:assets --splash ./src/Assets/Images/[splash.psd] // 2208x2208 psd
+    main/res/values/styles.xml @drawable/launch_screen_bitmap -> @drawable/launch_screen
