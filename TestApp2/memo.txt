@@ -1,3 +1,8 @@
+color 68 101 132  -> #446784 파란상단
+color 222 222 222 -> #DEDEDE 회색박스
+color 140 211 197 -> #8CD3C5 메인컬러
+-----------------------------------------------------------------
+
 # types, styled
 npm install --save styled-components
 npm install --save-dev typescript @types/react @types/react-native 
