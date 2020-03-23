@@ -7,12 +7,12 @@ import {
     createStackNavigator,   // 상세 페이지
 } from 'react-navigation-stack';
 
-import CheckLogin from '~/Screens/CheckLogin';
-import Login from '~/Screens/Login';
+import CheckLogin from '~/Screens/Navi_v4/Login/CheckLogin';
+import Login from '~/Screens/Navi_v4/Login';
 
 // 이걸 늘리자
-import Home from '~/Screens/Home';
-// import KurumaDetail from '~/Screens/KurumaDetail';
+import Home from '~/Screens/Navi_v4/Home';
+import HomeDetail from '~/Screens/Navi_v4/HomeDetail';
 
 const LoginNavigator = createStackNavigator({
     Login, // 로그인 + 회원 가입
@@ -20,6 +20,7 @@ const LoginNavigator = createStackNavigator({
 
 const HomeNavigator = createStackNavigator({
     Home,
+    HomeDetail,
 });
 
 const AppNavigator = createSwitchNavigator(
@@ -29,7 +30,8 @@ const AppNavigator = createSwitchNavigator(
         HomeNavigator,
     },
     {
-        initialRouteName: 'CheckLogin',
+        initialRouteName: 'CheckLogin', // 처음 로드할 때 초기의 탭 경로에 대한 routeName
+        // backBehavior 뒤로가기 버튼을 눌렀을 때, 초기 경로로 전환될지의 여부 / 디폴트는 node
     }
 );
 

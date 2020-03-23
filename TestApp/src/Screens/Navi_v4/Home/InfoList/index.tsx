@@ -40,12 +40,12 @@ const InfoList = ({ url, onPress }: Props) => {
                 }}
                 renderItem={({ item, index }) => (
                     <Info
-                        // id={(item as IMovie).id}
+                        id={0}
                         // image={(item as IMovie).large_cover_image}
                         // year={(item as IMovie).year}
                         // title={(item as IMovie).title}
                         // genres={(item as IMovie).genres}
-                        onPress={onPress}
+                        onPress={onPress} // 함수를 전달한다
                     />
                 )}
             />

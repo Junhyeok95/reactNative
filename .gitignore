@@ -373,3 +373,7 @@ lint/tmp/
 # End of https://www.gitignore.io/api/node,react,reactnative
 
 .DS_Store
+
+# 머지?
+.settings
+.project

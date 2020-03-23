@@ -43,40 +43,65 @@ const LabelGenres = Styled.Text`
 `;
 
 interface Props {
-    // id: number;
+    id: number;
     // image: string;
     // year: number;
     // title: string;
     // genres: Array<string>;
-    onPress?: (id: number) => void;
+    onPress?: (id: number) => void; // ? 를 통해서 넣어도 안넣어도 상관없다
 }
 
 const Info = ({
-    // id, image, year, title, genres, 
+    // id, image, year, title, genres,
+    id, 
     onPress
 }: Props) => {
     return (
-        <Container
-            activeOpacity={1}
-            onPress={() => {
-                if (onPress && typeof onPress === 'function') {
-                    onPress(1);
-                }
-            }}>
-            <CatalogImage
-                // source={{ uri: image }}
-                source={require('~/Assets/Images/add.png')}
-                style={{ width: Dimensions.get('window').width, height: 300 }}
-            />
-            <InfoContainer>
-                <LabelYear>개봉</LabelYear>
-                <SubInfoContainer>
-                    <Background />
-                    <LabelTitle>제목</LabelTitle>
-                    <LabelGenres>장르</LabelGenres>
-                </SubInfoContainer>
-            </InfoContainer>
-        </Container>
+        <>
+            <Container
+                activeOpacity={1}
+                onPress={() => {
+                    if (onPress && typeof onPress === 'function') {
+                        onPress(1);
+                    }
+                }}>
+                <CatalogImage
+                    // source={{ uri: image }}
+                    source={require('~/Assets/Images/add.png')}
+                    style={{ width: Dimensions.get('window').width, height: 300 }} // 사이즈 적용 필수
+                    />
+                <InfoContainer>
+                    <LabelYear>개봉</LabelYear>
+                    <SubInfoContainer>
+                        <Background />
+                        <LabelTitle>제목</LabelTitle>
+                        <LabelGenres>장르</LabelGenres>
+                    </SubInfoContainer>
+                </InfoContainer>
+            </Container>
+            {/* <Container
+                activeOpacity={1}
+                onPress={() => {
+                    if (onPress && typeof onPress === 'function') {
+                        onPress(1); // 앞 앞에서 받은 함수를 실행시킨다
+                        // 왜냐 함수를 전달한게 아닌 매개변수로 받은 함수를 버튼이 반응하면 실행하니까
+                    }
+                }}>
+                <CatalogImage
+                    // source={{ uri: image }}
+                    source={require('~/Assets/Images/add.png')}
+                    style={{ width: Dimensions.get('window').width, height: 300 }} // 사이즈 적용 필수
+                    />
+                <InfoContainer>
+                    <LabelYear>개봉</LabelYear>
+                    <SubInfoContainer>
+                        <Background />
+                        <LabelTitle>제목</LabelTitle>
+                        <LabelGenres>장르</LabelGenres>
+                    </SubInfoContainer>
+                </InfoContainer>
+            </Container> */}
+        </>
     );
 };
 

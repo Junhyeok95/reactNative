@@ -29,7 +29,7 @@ const CheckLogin = ({ navigation }: Props) => {
                     navigation.navigate('LoginNavigator');
                 }, 1000);
                 setTimeout(() => {
-                    Alert.alert("로그인 하자");
+                    // Alert.alert("로그인 하자");
                 }, 1000);
             }
         })

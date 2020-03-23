@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import Styled from 'styled-components/native';
 
-// import InfoList from './InfoList';
-// import SubCatalogList from './SubCatalogList';
+import InfoList from './InfoList';
+import SubList from './SubList';
 
 const Container = Styled.ScrollView`
     flex: 1;
@@ -40,21 +40,38 @@ const Home = ({ navigation }: Props) => {
 
     return (
         <Container>
-            <Label>Hello Home</Label>
+            <InfoList
+                url="JMT"
+                // 매개변수로 전달 할 뿐 Props .. 실행은 다른 컴포넌트가 한다
+                onPress={(id: number) => {
+                    navigation.navigate('HomeDetail', {
+                        id,
+                    });
+                }}
+            />
+            <SubList
+                title="비상연락망"
+                url="1"
+                onPress={(id: number) => {
+                    navigation.navigate('HomeDetail', {
+                        id,
+                });
+                }}
+            />
         </Container>
     );
 };
 
 /*
     <InfoList
-        title="회원 정보"
         url="0"
         onPress={(id: number) => {
-            navigation.navigate('MovieDetail', {
+            navigation.navigate('HomeNavigator', {
                 id,
             });
         }}
     />
+
     <SubCatalogList
         title="비상연락망"
         url="1"
@@ -91,27 +108,27 @@ interface INaviProps {
 Home.navigationOptions = ({ navigation }: INaviProps) => {
     const logout = navigation.getParam('logout'); // setParam('logout') 으로 저장해둔 값을 가저옴
     return {
-        title: 'APP_P',
-        headerTintColor: '#000000',
-        // headerStyle: {
-        //     backgroundColor: '#000000',
-        //     borderBottomWidth: 10,
-        // },
+        headerTitle: 'STACK',
+        headerTintColor: '#FFFFFF',
+        headerBackTitle: "string",
+        headerStyle: {
+            backgroundColor: '#446784',
+            borderBottomWidth: 10,
+        },
         headerTitleStyle: {
             fontWeight: 'bold',
         },
-        headerBackTitle: false, // 투명화
-        // headerRight: ( // 뒤로가기 버튼
-        //     <StyleButton
-        //         onPress={() => {
-        //             if (logout && typeof logout === 'function') {
-        //                 logout();
-        //             }
-        //         }}>
-        //         <Icon source={require('~/Assets/Images/ic_logout.png')} />
-        //     </StyleButton>
-        // )
-        // ),
+        backTitleVisible: false, // 투명화
+        headerRight: (
+            <StyleButton
+                onPress={() => {
+                    if (logout && typeof logout === 'function') {
+                        logout();
+                    }
+                }}>
+                <Icon source={require('~/Assets/Images/ic_logout.png')} />
+            </StyleButton>            
+        )
     };
 };
 
