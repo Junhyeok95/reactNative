@@ -15,6 +15,9 @@ import {
   DrawerNavigationProp,
 } from '@react-navigation/drawer';
 
+//https://oblador.github.io/react-native-vector-icons/
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import {UserContext} from '~/Context/User';
 
 import SignIn from './SignIn';
@@ -192,6 +195,9 @@ const TabNavi = () => {
         component={TabFirstStackNavi}
         options={{
           tabBarLabel: '내 정보',
+          tabBarIcon: ({color}) => (
+            <Icon name="person" color={color} size={26} />
+          ),
         }}
       />
       <Tab.Screen
@@ -199,6 +205,9 @@ const TabNavi = () => {
         component={TabSecondStackNavi}
         options={{
           tabBarLabel: '운전 점수',
+          tabBarIcon: ({color}) => (
+            <Icon name="drive-eta" color={color} size={26} />
+          ),
         }}
       />
       <Tab.Screen
@@ -206,6 +215,9 @@ const TabNavi = () => {
         component={TabThirdStackNavi}
         options={{
           tabBarLabel: '설정',
+          tabBarIcon: ({color}) => (
+            <Icon name="settings" color={color} size={26} />
+          ),
         }}
       />
     </Tab.Navigator>

@@ -24,6 +24,12 @@ npm install --save @react-navigation/stack
 npm install --save @react-navigation/drawer
 npm install --save @react-navigation/bottom-tabs
 
+# tab icon
+npm install --save react-native-vector-icons
+npm install --save-dev @types/react-native-vector-icons
+	<key>UIAppFonts</key> 추가 또는
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   # Material Bottom Tab Navigation
   npm install @react-navigation/material-bottom-tabs react-native-paper
   npm install react-native-vector-icons --save
