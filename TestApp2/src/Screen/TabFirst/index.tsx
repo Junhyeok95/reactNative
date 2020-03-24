@@ -8,9 +8,8 @@ const Container = Styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+  background-color: #8CD3C5;
 `;
-
-const Label = Styled.Text``;
 
 type NavigationProp = StackNavigationProp<TabFirstStackNaviParamList, 'Modal'>;
 
@@ -21,12 +20,11 @@ interface Props {
 const TabFirst = ({navigation}: Props) => {
   return (
     <Container>
-      <Label>This is First Tab</Label>
-      <Button label="Open Modal" onPress={() => navigation.navigate('Modal')} />
-      <Button
-        label="Open Full Modal"
-        onPress={() => navigation.navigate('FullModal')}
-      />
+      <Button label="상세 보기" onPress={() => navigation.navigate('Modal')} />
+      <Button label="정보 수정" onPress={() => navigation.navigate('Modal')} />
+      <Button label="상세 보기" onPress={() => navigation.navigate('Modal')} />
+      <Button label="정보 수정" onPress={() => navigation.navigate('Modal')} />
+      {/* <Button label="Open Full Modal" onPress={() => navigation.navigate('FullModal')} /> */}
     </Container>
   );
 };

@@ -10,12 +10,10 @@ const Container = Styled.View`
   justify-content: center;
   align-items: center;
 `;
-const Label = Styled.Text``;
 
-// const ButtonContainer = Styled.View`
-//   flex-direction: column;
-//   margin-top: 20px;
-// `;
+const ButtonContainer = Styled.View`
+  flex-direction: row;
+`;
 
 type NavigationProp = StackNavigationProp<LoginStackNaviParamList, 'SignIn'>;
 
@@ -28,18 +26,18 @@ const SignIn = ({navigation}: Props) => {
 
   return (
     <Container>
-      <Label>This is SignIn Screen</Label>
       <Button
-        label="SignIn"
-        onPress={() => login('WDJ@YJU', 'password')}
+        // label="Sign In"
+        label="로그인"
+        onPress={() => login('WDJ@YJU', 'password')} // 이 동작이 setUserInfo 실행 -> NavigationContainer 의 함수로 인해서 MainNavi 스택으로 이동
       />
       {/* <ButtonContainer> */}
         <Button
-          label="SignUp"
+          label="회원가입"
           onPress={() => navigation.navigate('SignUp')}
         />
         <Button
-          label="Reset Password"
+          label="비밀번호 재설정"
           onPress={() => navigation.navigate('ResetPassword')}
         />
       {/* </ButtonContainer> */}

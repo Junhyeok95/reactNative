@@ -7,14 +7,14 @@ const Container = Styled.TouchableOpacity`
   padding-left: 12px;
   padding-right: 12px;
   border-radius: 12px;
-  background-color: #333333;
-  justify-content: center;
+  background-color: #333;
+  justify-content: center; 
   align-items: center;
-  margin: 12px;
+  margin: 6px;
 `;
 const Label = Styled.Text`
   color: white;
-  font-size: 25px;
+  font-size: 30px;
 `;
 
 interface Props {

@@ -23,52 +23,41 @@ import ResetPassword from './ResetPassword';
 import TabFirst from './TabFirst';
 import TabSecond from './TabSecond';
 import TabThird from './TabThird';
-import TabFourth from './TabFourth';
 import Modal from './Modal';
 
-import Styled from 'styled-components/native';
-
-const TouchableOpacity = Styled.TouchableOpacity`
-  background-color: black;
-  margin-left: 8px;
-`;
-
-const Label = Styled.Text`
-  color: white;
-`;
-
-import YJU from './YJU';
+const Container = () => { return (<></>); }
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-type TypeDrawerProp = DrawerNavigationProp<
-  {
-    TabNavi: undefined;
-    MaterialTabNavi: undefined;
-    MaterialTopTabNaviStackNavi: undefined;
-    Logout: undefined;
-  },
-  'TabNavi'
->;
-
-interface DrawerProp {
-  navigation: TypeDrawerProp;
-}
-
+// ------------------------------------------------------------------------
+// type TypeDrawerProp = DrawerNavigationProp<
+//   {
+//     TabNavi: undefined;
+//     Logout: undefined;
+//   },
+//   'TabNavi'
+// >;
+// interface DrawerProp {
+//   navigation: TypeDrawerProp;
+// }
 const LoginStackNavi = () => {
+  // {navigation}: DrawerProp 전달하고
+  // headerLeft: (props: StackHeaderLeftButtonProps) => (
+  // onPress={() => navigation.openDrawer() 를 통해서 드로우 호출 가능
+// ------------------------------------------------------------------------
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#0000FF',
+          borderBottomWidth:3
         },
-        headerTintColor: '#fff',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-      }}>
+      }}
+    >
       <Stack.Screen
         name="SignaIn"
         component={SignIn}
@@ -79,46 +68,118 @@ const LoginStackNavi = () => {
       <Stack.Screen
         name="SignUp"
         component={SignUp}
-        options={{headerBackTitleVisible: false}}
+        options={{
+          headerTitle:"회원가입",
+          headerBackTitleVisible: false
+        }} // 뒤로가기 버튼 타이틀
       />
       <Stack.Screen
         name="ResetPassword"
         component={ResetPassword}
+        options={{
+          headerTitle:"비밀번호 재설정",
+          headerBackTitleVisible: false,
+        }} // 뒤로가기 버튼 타이틀
       />
     </Stack.Navigator>
   );
 };
 
-const TabFirstStackNavi = ({navigation}: DrawerProp) => {
+const TabFirstStackNavi = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: '#446784',
         },
-        headerTintColor: '#fff',
+        headerTintColor: '#FFF',
         headerTitleStyle: {
           fontWeight: 'bold',
-          fontSize: 30,
+          fontSize: 25,
         },
-      }}>
+      }}
+    >
       <Stack.Screen
-        name="クルマもり"
+        name="MyInfo"
         component={TabFirst}
         options={{
-          headerLeft: (props: StackHeaderLeftButtonProps) => (
-            // <IconButton
-            //   iconName="menu"
-            //   onPress={() => navigation.openDrawer()}
-            // />
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Label>Touch Img</Label>
-              <Label>openDrawer</Label>
-            </TouchableOpacity>
-          ),
+          headerTitle:"クルマモリ9",
+          headerBackTitleVisible: false
         }}
       />
-      <Stack.Screen name="Modal" component={Modal} />
+      <Stack.Screen
+        name="Modal"
+        component={Modal}
+        options={{
+          headerBackTitleVisible: false
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const TabSecondStackNavi = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#446784',
+        },
+        headerTintColor: '#FFF',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 25,
+        },
+      }}
+    >
+      <Stack.Screen
+        name="DrivingScore"
+        component={TabSecond}
+        options={{
+          headerTitle:"クルマモリ9",
+          headerBackTitleVisible: false
+        }}
+      />
+      <Stack.Screen
+        name="Modal"
+        component={Modal}
+        options={{
+          headerBackTitleVisible: false
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const TabThirdStackNavi = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#446784',
+        },
+        headerTintColor: '#FFF',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 25,
+        },
+      }}
+    >
+      <Stack.Screen
+        name="Setup"
+        component={TabThird}
+        options={{
+          headerTitle:"クルマモリ9",
+          headerBackTitleVisible: false
+        }}
+      />
+      <Stack.Screen
+        name="Modal"
+        component={Modal}
+        options={{
+          headerBackTitleVisible: false
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -126,151 +187,30 @@ const TabFirstStackNavi = ({navigation}: DrawerProp) => {
 const TabNavi = () => {
   return (
     <Tab.Navigator>
-      {/* <Tab.Screen
-        name="TabFirstStackNavi"
-        component={TabFirstStackNavi}
-        options={{
-          tabBarLabel: 'Frist',
-          tabBarIcon: ({color}) => <Icon name="home" color={color} size={26} />,
-        }}
-      />
-      <Tab.Screen
-        name="TabSecond"
-        component={TabSecond}
-        options={{
-          tabBarLabel: 'Second',
-          tabBarIcon: ({color}) => (
-            <Icon name="message" color={color} size={26} />
-          ),
-        }}
-      /> */}
       <Tab.Screen
         name="TabFirstStackNavi"
         component={TabFirstStackNavi}
         options={{
-          tabBarLabel: 'Frist',
-          tabBarIcon: ({color}) => (
-            <Label>Icon</Label>
-          ),
+          tabBarLabel: '내 정보',
         }}
       />
       <Tab.Screen
         name="TabSecond"
-        component={TabSecond}
+        component={TabSecondStackNavi}
         options={{
-          tabBarLabel: 'Second',
-          tabBarIcon: ({color}) => (
-            <Label>Icon</Label>
-          ),
+          tabBarLabel: '운전 점수',
         }}
       />
       <Tab.Screen
         name="TabThird"
-        component={TabThird}
+        component={TabThirdStackNavi}
         options={{
-          tabBarLabel: 'Third',
-          tabBarIcon: ({}) => (
-            <Label>Icon</Label>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="TabFourth"
-        component={TabFourth}
-        options={{
-          tabBarLabel: 'Fourth',
-        }}
-      />
-      <Tab.Screen
-        name="YJU"
-        component={YJU}
-        options={{
-          tabBarLabel: 'TabFourth5',
-          tabBarIcon: () => (
-            <Label>Icon</Label>
-          ),
+          tabBarLabel: '설정',
         }}
       />
     </Tab.Navigator>
   );
 };
-
-// const MaterialTabNavi = () => {
-//   return (
-//     <MaterialTab.Navigator>
-//       <MaterialTab.Screen
-//         name="TabFirstStackNavi"
-//         component={TabFirstStackNavi}
-//         options={{
-//           tabBarColor: '#281b39',
-//           tabBarLabel: 'Frist',
-//           tabBarIcon: ({color}) => <Icon name="home" color={color} size={26} />,
-//         }}
-//       />
-//       <MaterialTab.Screen
-//         name="TabSecond"
-//         component={TabSecond}
-//         options={{
-//           tabBarColor: '#0e141d',
-//           tabBarLabel: 'Second',
-//           tabBarIcon: ({color}) => (
-//             <Icon name="people" color={color} size={26} />
-//           ),
-//         }}
-//       />
-//       <MaterialTab.Screen
-//         name="TabThird"
-//         component={TabThird}
-//         options={{
-//           tabBarColor: '#E64A19',
-//           tabBarLabel: 'Third',
-//           tabBarIcon: ({color}) => (
-//             <Icon name="message" color={color} size={26} />
-//           ),
-//         }}
-//       />
-//       <MaterialTab.Screen
-//         name="TabFourth"
-//         component={TabFourth}
-//         options={{
-//           tabBarColor: '#524365',
-//           tabBarLabel: 'Fourth',
-//           tabBarIcon: ({color}) => (
-//             <Icon name="settings" color={color} size={26} />
-//           ),
-//         }}
-//       />
-//     </MaterialTab.Navigator>
-//   );
-// };
-
-// const MaterialTopTabNavi = () => {
-//   return (
-//     <MaterailTopTab.Navigator>
-//       <MaterailTopTab.Screen name="TabFirst" component={TabFirst} />
-//       <MaterailTopTab.Screen name="TabSecond" component={TabSecond} />
-//       <MaterailTopTab.Screen name="TabThird" component={TabThird} />
-//       <MaterailTopTab.Screen name="TabFourth" component={TabFourth} />
-//     </MaterailTopTab.Navigator>
-//   );
-// };
-
-// const MaterialTopTabNaviStackNavi = ({navigation}: DrawerProp) => {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerLeft: (props: StackHeaderLeftButtonProps) => (
-//           <IconButton
-//             iconName="menu"
-//             onPress={() => navigation.openDrawer()}
-//             color="black"
-//           />
-//         ),
-//       }}>
-//       <Stack.Screen name="MaterialTopTabNavi" component={MaterialTopTabNavi} />
-//     </Stack.Navigator>
-//   );
-// };
 
 const CustomDrawerContent = (
   props: DrawerContentComponentProps<DrawerContentOptions>,
@@ -279,7 +219,11 @@ const CustomDrawerContent = (
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem label="Logout" onPress={() => logout()} />
+      <DrawerItem
+        // label="Logout"
+        label="로그아웃"
+        onPress={() => logout()}
+      />
     </DrawerContentScrollView>
   );
 };
@@ -289,21 +233,25 @@ const DrawNavi = () => {
 
   return (
     <Drawer.Navigator
-      drawerContent={props => CustomDrawerContent(props, logout)}>
-      <Drawer.Screen name="TabNavi" component={TabNavi} />
-      {/* <Drawer.Screen name="MaterialTabNavi" component={MaterialTabNavi} />
+      drawerContent={props => CustomDrawerContent(props, logout)}
+      // drawerPosition={"right"}
+      // drawerType={'back'}
+      // hideStatusBar={true}
+    >
       <Drawer.Screen
-        name="MaterialTopTabNaviStackNavi"
-        component={MaterialTopTabNaviStackNavi}
-      /> */}
-      <Drawer.Screen name="TabNavi2" component={TabNavi} />
-      <Drawer.Screen name="TabNavi3" component={TabNavi} />
-      <Drawer.Screen name="TabNavi4" component={TabNavi} />
-      <Drawer.Screen name="TabNavi5" component={TabNavi} />
-      <Drawer.Screen name="TabNavi6" component={TabNavi} />
-      <Drawer.Screen name="TabNavi7" component={TabNavi} />
-      <Drawer.Screen name="TabNavi8" component={TabNavi} />
-      <Drawer.Screen name="TabNavi9" component={TabNavi} />
+        name="TabNavi"
+        component={TabNavi}
+        options={{
+          title: '메인 페이지',
+        }}
+      />
+      <Drawer.Screen
+        name="page"
+        component={Container}
+        options={{
+          title: '보조 페이지',
+        }}
+      />
     </Drawer.Navigator>
   );
 };
@@ -311,11 +259,11 @@ const DrawNavi = () => {
 const MainNavi = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen
+      <Stack.Screen     
         name="DrawNavi"
         component={DrawNavi}
         options={{
-          headerShown: false,
+          headerShown: false, // false == header: null
         }}
       />
       <Stack.Screen name="FullModal" component={Modal} />

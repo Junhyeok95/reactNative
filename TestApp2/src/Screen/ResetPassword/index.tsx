@@ -14,15 +14,12 @@ import { Linking } from 'react-native';
 const PasswordResetText = Styled.Text`
   width: 100%;
   font-size: 30px;
-  color: #000000;
   text-align: center;
 `;
 
 const ResetPassword = () => {
   return (
     <Container>
-      <Label>This is ResetPassword Screen</Label>
-      <Label>온라인 재설정</Label>
       <PasswordResetText
         onPress={() => {
             Linking.openURL('https://yju.ac.kr');
