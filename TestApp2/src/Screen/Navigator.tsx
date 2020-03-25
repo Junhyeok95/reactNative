@@ -246,7 +246,7 @@ const DrawNavi = () => {
   return (
     <Drawer.Navigator
       drawerContent={props => CustomDrawerContent(props, logout)}
-      // drawerPosition={"right"}
+      drawerPosition={"right"}
       // drawerType={'back'}
       // hideStatusBar={true}
     >

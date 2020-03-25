@@ -2,28 +2,28 @@ import React from 'react';
 import Styled from 'styled-components/native';
 
 const Container = Styled.TouchableOpacity`
-  width: 80%;
-  height: 50px;
-  padding-left: 12px;
-  padding-right: 12px;
-  border-radius: 12px;
-  background-color: #333;
-  justify-content: center; 
+  flex: 1;
+  width: 100%;
+  justify-content: center;
   align-items: center;
-  margin: 6px;
+  background-color: #DDD;
+  border-radius: 8px;
+  border-width: 1px;
+  border-color: #DDD;
 `;
 const Label = Styled.Text`
-  color: white;
-  font-size: 30px;
+  font-size: 16px;
 `;
 
 interface Props {
   label: string;
+  style?: Object;
   onPress?: () => void;
 }
-const Button = ({label, onPress}: Props) => {
+
+const Button = ({label, style, onPress}: Props) => {
   return (
-    <Container onPress={onPress}>
+    <Container style={style} onPress={onPress}>
       <Label>{label}</Label>
     </Container>
   );
