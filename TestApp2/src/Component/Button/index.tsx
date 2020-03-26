@@ -18,13 +18,14 @@ const Label = Styled.Text`
 interface Props {
   label: string;
   style?: Object;
+  color?: string;
   onPress?: () => void;
 }
 
-const Button = ({label, style, onPress}: Props) => {
+const Button = ({label, style, color, onPress}: Props) => {
   return (
     <Container style={style} onPress={onPress}>
-      <Label>{label}</Label>
+      <Label style={{ color: color ? color:'#000' }}>{label}</Label>
     </Container>
   );
 };

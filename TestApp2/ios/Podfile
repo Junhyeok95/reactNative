@@ -36,6 +36,7 @@ target 'TestApp2' do
 
   pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  # pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
   
   target 'TestApp2Tests' do
     inherit! :search_paths
