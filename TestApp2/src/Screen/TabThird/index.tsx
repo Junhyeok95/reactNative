@@ -17,7 +17,7 @@ const BackContainer = Styled.View`
   background-color: #FCFCFC;
   margin-top: 8px;
   margin-bottom: 8px;
-  padding: 8px;
+  padding: 12px;
   border-width: 1px;
   border-color: #DDD;
   box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3);
@@ -26,11 +26,20 @@ const LabelContainer = Styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 8px;
 `;
 const Label = Styled.Text`
   color: #000000;
   font-size: 24px;
 `;
+const Text = Styled.Text`
+  color: #555;
+  font-size: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+`;
+const BR:string = '\n';
+
 type NavigationProp = StackNavigationProp<TabFirstStackNaviParamList, 'Modal'>;
 
 interface Props {
@@ -45,6 +54,11 @@ const TabThird = ({navigation}: Props) => {
           <Label>기기 정보</Label>
           <ModalButton label="기기 연결" onPress={() => navigation.navigate('Modal')} />
         </LabelContainer>
+        <Text>
+          기기 코드
+          {BR}
+          ABCD - EFGH - 1234
+        </Text>
       </BackContainer>
       <BackContainer>
         <LabelContainer>
@@ -57,6 +71,11 @@ const TabThird = ({navigation}: Props) => {
           <Label>버전 정보</Label>
           <ModalButton label="업데이트" onPress={() => navigation.navigate('Modal')} />
         </LabelContainer>
+        <Text>
+          현재버전 1. 2. 7
+          {BR}
+          최신버전 1. 2. 9
+        </Text>
       </BackContainer>
       {/* <Button label="Open Full Modal" onPress={() => navigation.navigate('FullModal')} /> */}
     </Container>
