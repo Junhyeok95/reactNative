@@ -58,6 +58,13 @@ const TabSecond = ({navigation}: Props) => {
           <Item />
         )}
         ListEmptyComponent={<EmptyItem />} // 배열이 없을 경우 표시되는 컴포넌트
+
+          // 무한 스크롤 구현
+          onEndReached={() => {
+            setList([...list, ...getFunc()]);
+          }}
+          onEndReachedThreshold={0.5}
+          
       /> */}
 
       {/* <Button label="Open Full Modal" onPress={() => navigation.navigate('FullModal')} /> */}

@@ -240,6 +240,41 @@ const CustomDrawerContent = (
   );
 };
 
+import {Platform} from "react-native";
+import Styled from 'styled-components/native';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+const MapContainer = Styled.View`
+  flex: 1;
+`;
+const AppleMap = () => {
+  return (
+    <MapContainer>
+      <MapView style={{flex: 1}}
+        initialRegion={{
+          latitude: 35.896311,
+          longitude: 128.622051,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+      }}>
+        <Marker
+          coordinate={{latitude: 35.896311, longitude: 128.622051}}
+          title="영진 전문 대학교"
+          description="this is example"
+        />
+      </MapView>
+    </MapContainer>
+  ); 
+};
+const GoogleMap = () => {
+  return (
+    <MapContainer>
+      <MapView style={{flex: 1}} provider={PROVIDER_GOOGLE} 
+      
+      />
+    </MapContainer>
+  );
+};
+
 const DrawNavi = () => {
   const {logout} = useContext<IUserContext>(UserContext);
 
@@ -262,6 +297,20 @@ const DrawNavi = () => {
         component={Container}
         options={{
           title: '보조 페이지',
+        }}
+      />
+      <Drawer.Screen
+        name="AppleMap"
+        component={Platform.OS === "ios" ? AppleMap : Container}
+        options={{
+          title: '애플 맵',
+        }}
+      />
+      <Drawer.Screen
+        name="GoogleMap"
+        component={GoogleMap}
+        options={{
+          title: '구글 맵',
         }}
       />
     </Drawer.Navigator>
