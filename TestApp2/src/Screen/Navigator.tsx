@@ -27,6 +27,7 @@ import TabFirst from './TabFirst';
 import TabSecond from './TabSecond';
 import TabThird from './TabThird';
 import Modal from './Modal';
+import Bluetooth from './Bluetooth';
 
 const Container = () => { return (<></>); }
 
@@ -311,6 +312,13 @@ const DrawNavi = () => {
         component={GoogleMap}
         options={{
           title: '구글 맵',
+        }}
+      />
+      <Drawer.Screen
+        name="BluetoothGPS"
+        component={Bluetooth}
+        options={{
+          title: '연동 & 위치정보',
         }}
       />
     </Drawer.Navigator>
