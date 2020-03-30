@@ -45,6 +45,30 @@ const ButtonMargin = Styled.View`
   width: 16px;
 `;
 
+import {PermissionsAndroid} from "react-native";
+const requestPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: "App GPS Permission",
+        message:
+          "App needs access to your GPS ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK"
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("You can use the GPS");
+    } else {
+      console.log("GPS permission denied");
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+};
+
 type NavigationProp = StackNavigationProp<LoginStackNaviParamList, 'SignIn'>;
 
 interface Props {
@@ -94,6 +118,12 @@ const SignIn = ({navigation}: Props) => {
             />
           </ButtonContainer>
         </FormContainer>
+        <Button
+            // label="Sign In"
+            style={{ marginBottom: 8 }}
+            label="블루투스"
+            onPress={() => requestPermission()}
+        />
       </Container>
     </TouchableWithoutFeedback>
   );

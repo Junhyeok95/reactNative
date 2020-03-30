@@ -47,7 +47,6 @@ const LocationItemContainer = Styled.View`
 
 const LocationItem = Styled.Text``;
 
-
 interface Props {}
 
 interface ILocationData {
