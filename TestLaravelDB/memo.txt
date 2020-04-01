@@ -1,0 +1,2 @@
+npm install --save-dev @bam.tech/react-native-make
+react-native set-icon --path ./src/Assets/Images/app_icon.png --background "#FFFFFF"
