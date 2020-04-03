@@ -3,6 +3,7 @@ import {FlatList} from 'react-native';
 import Styled from 'styled-components/native';
 import Toggle from '~/Screens/BluetoothList/List/Toggle';
 import Subtitle from '~/Screens/BluetoothList/List/Subtitle';
+import Device from '~/Components/Device';
 
 const FlatListContainer = Styled.View`
   flex: 1;
@@ -38,6 +39,12 @@ const List = ({  }: Props) => {
   // console.log(arr);
   // console.log(typeof(arr));
 
+  const renderEmpty = () => <EmptyItem><Text>NO List</Text></EmptyItem>
+  const renderItem = ({ item, index }) => {
+    // data 변경 후 name , key 등등 .. 필요 
+    return <Device item={item} index={index} iconLeft={require('~/Assets/Images/Icons/ic_devices.png')} iconRight={require('~/Assets/Images/Icons/ic_setting.png')} />
+  }
+
   return (
     <FlatListContainer  // children?: JSX.Element | Array<JSX.Element>; 
                         // 활용해서 {props.children} 레이아웃을 따로 뺄 수도 있다
@@ -46,13 +53,11 @@ const List = ({  }: Props) => {
     <Subtitle title = 'Device List'/>
       <Container
         keyExtractor={(item, index) => {
-          return `test-${index}`;
+          return `key-${index}`;
         }}
         data={testList}
-        ListEmptyComponent={<EmptyItem><Text> No List</Text></EmptyItem>} // data 배열이 없을 경우 표시되는 컴포넌트
-        renderItem={({item, index}) => {
-          return <Text>{item} to {index}</Text>; // <Itme> 해야함
-        }}
+        ListEmptyComponent={renderEmpty} // data 배열이 없을 경우 표시되는 컴포넌트
+        renderItem={renderItem}
       />
     </FlatListContainer>
 
