@@ -1,6 +1,8 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
 import List from '~/Screens/BluetoothList/List';
+import Header from '~/Screens/BluetoothList/Header';
+import Test from '~/Screens/BluetoothList/Test';
 
 // -----------------------------------------------------------------------------------------
 
@@ -60,28 +62,19 @@ import List from '~/Screens/BluetoothList/List';
 
 const SafeAreaView = Styled.SafeAreaView`
   flex: 1;
-  width: 100%;
-  justify-content: center;
   align-items: center;
   background-color: #FFF;
-`;
-const Container = Styled.View`
-  flex: 1;
-  width: 80%;
-  justify-content: center;
-  background-color: #888;
 `;
 
 interface Props {}
 
 const BluetoothList = ({  }: Props) => {
   
-
   return (
     <SafeAreaView>
-      <Container>
-        <List />
-      </Container>
+      <Header />
+      <List />
+      {/* <Test /> */}
     </SafeAreaView>
   );
 };
