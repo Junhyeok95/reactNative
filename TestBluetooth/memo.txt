@@ -8,6 +8,15 @@ npm install --save-dev typescript @types/react @types/react-native @types/styled
 
 # AsyncStorage
 npm install --save @react-native-community/async-storage
+react-native link @react-native-communityasync-storage
+pod install
 
-# Bluetooth-Serial-Next
+# Bluetooth
 npm install --save react-native-bluetooth-serial-next
+react-native link react-native-bluetooth-serial-next
+pod install
+
+# android/app/src/main AndroidManifest.xml
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

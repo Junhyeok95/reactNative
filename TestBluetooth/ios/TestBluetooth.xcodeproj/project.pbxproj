@@ -16,6 +16,8 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* TestBluetoothTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TestBluetoothTests.m */; };
+		409F3B8E243842660057B1EE /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 409F3B8D243842660057B1EE /* ios */; };
+		409F3B9724384DE90057B1EE /* libRCTBluetoothSerial.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 409F3B9624384DC80057B1EE /* libRCTBluetoothSerial.a */; };
 		4B20A57DC94B2D39E74D0093 /* libPods-TestBluetooth-TestBluetoothTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A853DC347A84F10185F1B7BE /* libPods-TestBluetooth-TestBluetoothTests.a */; };
 		6546FB69461DECCEDE8F4118 /* libPods-TestBluetooth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E914B9B240FC57AD269638 /* libPods-TestBluetooth.a */; };
 		CBAC18CC17843AE0676DCA7F /* libPods-TestBluetooth-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FFB20413F20699ACDE28E46F /* libPods-TestBluetooth-tvOS.a */; };
@@ -37,6 +39,13 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "TestBluetooth-tvOS";
 		};
+		409F3B9524384DC80057B1EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 409F3B9124384DC80057B1EE /* RCTBluetoothSerial.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 69CA06031CC43C2900AF6479;
+			remoteInfo = RCTBluetoothSerial;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +65,8 @@
 		2D02E47B1E0B4A5D006451C7 /* TestBluetooth-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestBluetooth-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* TestBluetooth-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestBluetooth-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E5C987EE3A3E6A614116E68 /* Pods-TestBluetooth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestBluetooth.debug.xcconfig"; path = "Target Support Files/Pods-TestBluetooth/Pods-TestBluetooth.debug.xcconfig"; sourceTree = "<group>"; };
+		409F3B8D243842660057B1EE /* ios */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ios; sourceTree = "<group>"; };
+		409F3B9124384DC80057B1EE /* RCTBluetoothSerial.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBluetoothSerial.xcodeproj; path = "../node_modules/react-native-bluetooth-serial-next/ios/RCTBluetoothSerial.xcodeproj"; sourceTree = "<group>"; };
 		489771792E65BF62A45E532E /* Pods-TestBluetooth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestBluetooth.release.xcconfig"; path = "Target Support Files/Pods-TestBluetooth/Pods-TestBluetooth.release.xcconfig"; sourceTree = "<group>"; };
 		4E132BEB040892BF23FE7B63 /* Pods-TestBluetooth-TestBluetoothTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestBluetooth-TestBluetoothTests.release.xcconfig"; path = "Target Support Files/Pods-TestBluetooth-TestBluetoothTests/Pods-TestBluetooth-TestBluetoothTests.release.xcconfig"; sourceTree = "<group>"; };
 		51C2DD5893BDB2E00996EC86 /* Pods-TestBluetooth-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestBluetooth-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-TestBluetooth-tvOS/Pods-TestBluetooth-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -74,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				409F3B9724384DE90057B1EE /* libRCTBluetoothSerial.a in Frameworks */,
 				4B20A57DC94B2D39E74D0093 /* libPods-TestBluetooth-TestBluetoothTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -148,7 +160,6 @@
 				D35B52F80D345E942F63E534 /* Pods-TestBluetooth-tvOSTests.debug.xcconfig */,
 				A509496BA3EADB86E31385C2 /* Pods-TestBluetooth-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -165,9 +176,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		409F3B9224384DC80057B1EE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				409F3B9624384DC80057B1EE /* libRCTBluetoothSerial.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				409F3B9124384DC80057B1EE /* RCTBluetoothSerial.xcodeproj */,
+				409F3B8D243842660057B1EE /* ios */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -316,6 +337,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 409F3B9224384DC80057B1EE /* Products */;
+					ProjectRef = 409F3B9124384DC80057B1EE /* RCTBluetoothSerial.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* TestBluetooth */,
@@ -325,6 +352,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		409F3B9624384DC80057B1EE /* libRCTBluetoothSerial.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTBluetoothSerial.a;
+			remoteRef = 409F3B9524384DC80057B1EE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
@@ -338,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				409F3B8E243842660057B1EE /* ios in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -373,7 +411,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;

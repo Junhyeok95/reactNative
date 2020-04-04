@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList} from 'react-native';
 import Styled from 'styled-components/native';
 import Toggle from '~/Screens/BluetoothList/List/Toggle';
 import Subtitle from '~/Screens/BluetoothList/List/Subtitle';
 import Device from '~/Components/Device';
+// 커맨드 + 클릭으로 메소드 살펴보기
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
+import {Platform} from 'react-native';
 
 const FlatListContainer = Styled.View`
   flex: 1;
@@ -32,6 +35,9 @@ const List = ({  }: Props) => {
   // const [testList, setTestList] = useState<Array<string>>([]);
   const [testList, setTestList] = useState<Array<string>>(["a","b","c"]);
 
+  const [contents, setContents] = useState<Array<any>>([]);
+  const [blueToothEnable, setBlueToothEnable] = useState<boolean>(false);
+
   // const arr = [];
   // for (let i=0; i<10; i++){
   //   arr.push(i);
@@ -44,6 +50,39 @@ const List = ({  }: Props) => {
     // data 변경 후 name , key 등등 .. 필요 
     return <Device item={item} index={index} iconLeft={require('~/Assets/Images/Icons/ic_devices.png')} iconRight={require('~/Assets/Images/Icons/ic_setting.png')} />
   }
+
+  useEffect(()=>{
+    console.log("----------------");
+    console.log(Platform.Version);
+    console.log(Platform.OS);
+    console.log("----------------");
+    try {
+      async function init(){
+        if (Platform.OS === "android"){
+          // const enable = await BluetoothSerial.requestEnable(); // 안드로이드 블루투스 활성화 메시지 표시, ios는 에러 함수
+          // BluetoothSerial.enable(); -> 안드로이드 블루투스 활성화, ios는 에러 함수
+          // BluetoothSerial.disable(); -> 안드로이드 블루투스 비활성화, ios는 에러 함수
+        }
+        // const isEnabled = await BluetoothSerial.isEnabled();
+        // console.log(isEnabled); // 블루투스 활성화 상태 표시
+        // const request = await BluetoothSerial.list();
+        // console.log(request);
+      }
+
+      init();
+
+      return() => {
+        async function remove(){
+          // await BluetoothSerial.stopScanning();
+          console.log('scanner');
+        }
+
+        remove();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [])
 
   return (
     <FlatListContainer  // children?: JSX.Element | Array<JSX.Element>; 
