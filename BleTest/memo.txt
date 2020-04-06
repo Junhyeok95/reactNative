@@ -15,3 +15,6 @@ err -> {
   npm install
   npm run ios --reset-cache  
 }
+
+개발자 빌드
+xcode -> 좌측 왼쪽 -> TARGETS -> Signing & Capabilities
