@@ -13,6 +13,7 @@
     "react": "16.11.0",
     "react-native": "0.62.1",
     "react-native-ble-manager": "^7.2.0",
+    "react-native-geolocation-service": "^4.0.0",
     "styled-components": "^5.0.1"
   },
   "devDependencies": {

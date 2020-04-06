@@ -17,6 +17,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* BleTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BleTestTests.m */; };
+		40C1A4C4243B16DA007C012C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40C1A4C3243B16DA007C012C /* MapKit.framework */; };
 		61E7F50EC1447EEC1B8FB297 /* libPods-BleTest-BleTestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 54BE70D4859CDB378B7875A7 /* libPods-BleTest-BleTestTests.a */; };
 		984D9852E3D642CB2C658101 /* libPods-BleTest-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E34D189A823BEB4907E636F /* libPods-BleTest-tvOSTests.a */; };
 		C24FAFD874C2C369FA6D0786 /* libPods-BleTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0C08F4E24997D6B07CA1E32 /* libPods-BleTest.a */; };
@@ -55,6 +56,7 @@
 		2D02E47B1E0B4A5D006451C7 /* BleTest-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BleTest-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* BleTest-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BleTest-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3439736748F087EF50E2C797 /* Pods-BleTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BleTest.release.xcconfig"; path = "Target Support Files/Pods-BleTest/Pods-BleTest.release.xcconfig"; sourceTree = "<group>"; };
+		40C1A4C3243B16DA007C012C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		48459B536A711014A4CB3CDC /* Pods-BleTest-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BleTest-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-BleTest-tvOSTests/Pods-BleTest-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		5094E7F311644877DECB2534 /* Pods-BleTest-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BleTest-tvOS.release.xcconfig"; path = "Target Support Files/Pods-BleTest-tvOS/Pods-BleTest-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		54BE70D4859CDB378B7875A7 /* libPods-BleTest-BleTestTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BleTest-BleTestTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40C1A4C4243B16DA007C012C /* MapKit.framework in Frameworks */,
 				C24FAFD874C2C369FA6D0786 /* libPods-BleTest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,6 +142,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				40C1A4C3243B16DA007C012C /* MapKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				A0C08F4E24997D6B07CA1E32 /* libPods-BleTest.a */,

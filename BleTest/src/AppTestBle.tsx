@@ -17,6 +17,8 @@ import {
   NativeModules, NativeEventEmitter, } from "react-native";
 
 import BleManager from 'react-native-ble-manager';
+import Geolocation from 'react-native-geolocation-service';
+
 
 const window = Dimensions.get('window');
 
@@ -30,36 +32,42 @@ const View2 = Styled.View`
   backgroundColor: #FFF;
 `;
 
+const FlatListContainer = Styled(FlatList)``;
+const Container = Styled.View`
+  flex: 1;
+  backgroundColor: #f0f0f0;
+  margin: 5%;
+`;
 
 const App = () => {
-  const createThreeButtonAlert = () =>
-    Alert.alert(
-      "Alert Title",
-      "My Alert Msg",
-      [
-        {
-          text: "Ask me later",
-          onPress: () => console.log("Ask me later pressed")
-        },
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "OK", onPress: () => console.log("OK Pressed") }
-      ],
-      { cancelable: false }
-    );
+  // const createThreeButtonAlert = () =>
+  //   Alert.alert(
+  //     "Alert Title",
+  //     "My Alert Msg",
+  //     [
+  //       {
+  //         text: "Ask me later",
+  //         onPress: () => console.log("Ask me later pressed")
+  //       },
+  //       {
+  //         text: "Cancel",
+  //         onPress: () => console.log("Cancel Pressed"),
+  //         style: "cancel"
+  //       },
+  //       { text: "OK", onPress: () => console.log("OK Pressed") }
+  //     ],
+  //     { cancelable: false }
+  //   );
 
-  console.log("init--------------------------------------");
+  // console.log("init--------------------------------------");
 
 
   const [scanning, setScanning] = useState<boolean>(false);
   const [peripherals, setPeripherals] = useState<any>(new Map());
   const [appState, setAppState] = useState<string>(AppState.currentState);
 
-  console.log("type of function");
-  console.log("_handleDiscoverPeripheral ~ _handleAppStateChange");
+  // console.log("type of function");
+  // console.log("_handleDiscoverPeripheral ~ _handleAppStateChange");
   const _handleDiscoverPeripheral = (peripheral:any) => {
     // 발견 시 state peripheral 셋팅, 화면 렌더링
     let _peripherals = peripherals;
@@ -105,14 +113,44 @@ const App = () => {
     setAppState(nextAppState);
   };
 
+  const getCurrentWeather = () => {
+    Geolocation.getCurrentPosition(
+        position => {
+            console.log(">>> 위도 경도 ###########################");
+            console.log(position);
+
+            // 리턴값이 온다 / 위도와 경도를 position으로 받아옴
+            const { latitude, longitude } = position.coords;
+            // fetch API를 사용하여서 비동기로 데이터를 받아옴 ..
+            // fetch(
+            // )
+            //     // response.json() 은 res 정보를 JSON 형식으로 promise를 반환
+            //     .then(response => response.json())
+            //     .then(json => {
+            //     })
+            //     .catch(error => {
+            //         showError('날씨 정보를 가져오는데 실패' );
+            //     });
+        },
+        error => {
+            // 포지션 에러 발생시 로딩을 true시킨다
+            // showError('위치 정보를 가져오는데 실패 / 권한을 확인하자');
+            console.log('위치 정보를 가져오는데 실패 / 권한을 확인하자');
+        }
+    );
+};
+
   useEffect(() => {
+
+    getCurrentWeather();
+    
     AppState.addEventListener("change", _handleAppStateChange); // ReactNative AppState handle
 
     BleManager.start({showAlert: false}); // StartOptions
 
-    console.log("type of object");
-    console.log("handlerDiscover ~ handlerUpdate");
-    // Scanning 함수, Options 가능
+  //   console.log("type of object");
+  //   console.log("handlerDiscover ~ handlerUpdate");
+  //   // Scanning 함수, Options 가능
     const handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', _handleDiscoverPeripheral );
     const handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', _handleStopScan );
     const handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', _handleDisconnectedPeripheral );
@@ -136,13 +174,13 @@ const App = () => {
     }
 
     return () => {
-      AppState.removeEventListener("change", _handleAppStateChange); // AppState 를 이용한 헨들러 컨트롤
+  //     AppState.removeEventListener("change", _handleAppStateChange); // AppState 를 이용한 헨들러 컨트롤
 
-      console.log("componentWillUnmount ... type of object");
-      handlerDiscover.remove();
-      handlerStop.remove();
-      handlerDisconnect.remove();
-      handlerUpdate.remove();
+  //     console.log("componentWillUnmount ... type of object");
+  //     handlerDiscover.remove();
+  //     handlerStop.remove();
+  //     handlerDisconnect.remove();
+  //     handlerUpdate.remove();
     };
 
   },[]);
@@ -151,9 +189,12 @@ const App = () => {
   const _startScan = () => {
     if (!scanning) {
       //this.setState({peripherals: new Map()});
-      BleManager.scan([], 10, true).then((results) => {
+      setPeripherals(new Map());
+      console.log('scan');
+      BleManager.scan([], 3, true).then((results) => {
         JSON.stringify(results, null, 2);
         console.log('Scanning...');
+        console.log(results);
         setScanning(true);
       });
     }
@@ -179,7 +220,7 @@ const App = () => {
 
   function test(peripheral:any) {
 
-    createThreeButtonAlert();
+    // createThreeButtonAlert();
 
     // console.log("isConnectable ===> ", peripheral.advertising.isConnectable);
     // console.log("serviceUUIDs ===> ", peripheral.advertising.serviceUUIDs);
@@ -257,12 +298,13 @@ const App = () => {
 
   }
 
-  // FlatList 조건
+  // // FlatList 조건
   const renderItem = (item:any) => {
     const color = item.connected ? 'green' : '#fff';
     return (
       <TouchableHighlight onPress={() => {
-        test(item);
+        console.log("hahaha");
+        // test(item);
       }}>
         <View style={[styles.row, {backgroundColor: color}]}>
           <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
@@ -273,12 +315,12 @@ const App = () => {
     );
   }
 
-
   // return 필요 변수
   const list = Array.from(peripherals.values());
+  console.log(list);
   const btnScanTitle = 'Scan Bluetooth (' + (scanning ? 'on' : 'off') + ')';
 
-  console.log("init--------------------------------------");
+  console.log("init--------------------------------");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -299,25 +341,39 @@ const App = () => {
           </Text>
         </View2>
         <View style={{margin: 10}}>
+          {/* <Button title={btnScanTitle} onPress={() => {} } /> */}
+          <Button title="BleManager.enableBluetooth" onPress={() =>{
+            BleManager.enableBluetooth()
+            .then(() => {
+              console.log('Bluetooth is already enabled');
+            })
+            .catch((error) => {
+              Alert.alert('You need to enable bluetooth to use this app.');
+            });
+          }} />
+        </View>
+
+        <View style={{margin: 10}}>
+          {/* <Button title={btnScanTitle} onPress={() => {} } /> */}
           <Button title={btnScanTitle} onPress={() => _startScan() } />
         </View>
 
         <View style={{margin: 10}}>
-          <Button title="Retrieve connected peripherals" onPress={() => _retrieveConnected() } />
+          <Button title="Retrieve connected peripherals" onPress={() => { setScanning(false) } } />
+          {/* <Button title="Retrieve connected peripherals" onPress={() => _retrieveConnected() } /> */}
         </View>
-
-        <ScrollView style={styles.scroll}>
-          {(list.length == 0) &&
-            <View style={{flex:1, margin: 20}}>
-              <Text style={{textAlign: 'center'}}>No peripherals</Text>
-            </View>
-          }
-          <FlatList
-            data={list}
-            renderItem={({ item }) => renderItem(item) }
-            keyExtractor={item => item.id}
-          />
-        </ScrollView>
+          <Container>
+            {(list.length == 0) &&
+              <View style={{flex:1, margin: 20}}>
+                <Text style={{textAlign: 'center'}}>No peripherals</Text>
+              </View>
+            }
+            <FlatListContainer
+              data={list}
+              renderItem={({ item }) => renderItem(item) }
+              keyExtractor={item => item.id}
+            />
+          </Container>
       </View>
     </SafeAreaView>
   );
@@ -329,11 +385,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#CCC',
     width: window.width,
     height: window.height
-  },
-  scroll: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    margin: 10,
   },
   row: {
     margin: 10

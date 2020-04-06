@@ -18,3 +18,13 @@ err -> {
 
 개발자 빌드
 xcode -> 좌측 왼쪽 -> TARGETS -> Signing & Capabilities
+
+npm install --save react-native-geolocation-service
+  ios/[프로젝트 명]/info.plist 설정
+    NSLocationWhenInUseUsageDescription key 변경
+  ios/Podfile 설정
+    pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation' 추가
+  android/app/src/main/androidManifest.xml 설정
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 추가
+cd ios
+pod install
