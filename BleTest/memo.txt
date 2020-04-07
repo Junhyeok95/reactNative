@@ -28,3 +28,8 @@ npm install --save react-native-geolocation-service
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 추가
 cd ios
 pod install
+
+##### ㅌㅔ스트 #####
+
+# https://github.com/innoveit/react-native-ble-manager/tree/master/example
+# https://github.com/noble/bleno/tree/master/examples/pizza

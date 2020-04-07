@@ -99,7 +99,9 @@ export default class App extends Component {
   }
 
   handleUpdateValueForCharacteristic(data) {
+    // console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
     console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+    console.log('Raspberry pi data >> ');
   }
 
   handleStopScan() {
@@ -109,9 +111,8 @@ export default class App extends Component {
 
   startScan() {
     if (!this.state.scanning) {
-      //this.setState({peripherals: new Map()});
-      BleManager.scan([], 5, true).then((results) => {
-        JSON.stringify(results, null, 4); 
+      this.setState({peripherals: new Map()});
+      BleManager.scan([], 3, true).then((results) => {
         console.log('Scanning...');
         this.setState({scanning:true});
       });
@@ -165,7 +166,6 @@ export default class App extends Component {
             /* Test read current RSSI value
             BleManager.retrieveServices(peripheral.id).then((peripheralData) => {
               console.log('Retrieved peripheral services', peripheralData);
-
               BleManager.readRSSI(peripheral.id).then((rssi) => {
                 console.log('Retrieved actual RSSI value', rssi);
               });
@@ -173,9 +173,11 @@ export default class App extends Component {
 
             // Test using bleno's pizza example
             // https://github.com/sandeepmistry/bleno/tree/master/examples/pizza
+
+            // 돌아오는 서비스 등록
             BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
               console.log(peripheralInfo);
-              var service = '13333333-3333-3333-3333-333333333337';
+              var service = '13333333-3333-3333-3333-333333333338';
               var bakeCharacteristic = '13333333-3333-3333-3333-333333330003';
               var crustCharacteristic = '13333333-3333-3333-3333-333333330001';
 
@@ -213,16 +215,77 @@ export default class App extends Component {
     }
   }
 
+  test2(peripheral) {
+    setTimeout(() => {
+
+
+        // -------------------------------------------------
+        BleManager.readRSSI(peripheral.id) // 장치와의 거리 ...
+          .then((rssi) => {
+            // Success code
+            console.log('Current RSSI: ' + rssi);
+          })
+          .catch((error) => {
+            // Failure code
+            console.log(error);
+          });
+        // -------------------------------------------------
+
+        var service = '13333333-3333-3333-3333-333333333338';
+        var bakeCharacteristic = '13333333-3333-3333-3333-333333330003';
+        var crustCharacteristic = '13333333-3333-3333-3333-333333330001';
+
+        setTimeout(() => {
+          BleManager.startNotification(peripheral.id, service, bakeCharacteristic).then(() => {
+            console.log('Started notification on ' + peripheral.id);
+            setTimeout(() => {
+              BleManager.write(peripheral.id, service, bakeCharacteristic, [0,10]).then(() => {});
+              // BleManager.write(peripheral.id, service, crustCharacteristic, [0]).then(() => {
+              //   console.log('Writed NORMAL crust');
+              //   BleManager.write(peripheral.id, service, bakeCharacteristic, [1,95]).then(() => {
+              //     console.log('Writed 351 temperature, the pizza should be BAKED');
+              //     /*
+              //     var PizzaBakeResult = {
+              //       HALF_BAKED: 0,
+              //       BAKED:      1,
+              //       CRISPY:     2,
+              //       BURNT:      3,
+              //       ON_FIRE:    4
+              //     };*/
+              //   });
+              // });
+
+            }, 500);
+          }).catch((error) => {
+            console.log('Notification error', error);
+          });
+        }, 200);
+
+
+
+    }, 900);
+  }
+
   renderItem(item) {
     const color = item.connected ? 'green' : '#fff';
+    const color2 = item.connected ? 'blue' : '#fff';
     return (
-      <TouchableHighlight onPress={() => this.test(item) }>
-        <View style={[styles.row, {backgroundColor: color}]}>
-          <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
-          <Text style={{fontSize: 10, textAlign: 'center', color: '#333333', padding: 2}}>RSSI: {item.rssi}</Text>
-          <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 2, paddingBottom: 20}}>{item.id}</Text>
-        </View>
-      </TouchableHighlight>
+      <>
+        <TouchableHighlight onPress={() => this.test(item) }>
+          <View style={[styles.row, {backgroundColor: color}]}>
+            <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
+            <Text style={{fontSize: 10, textAlign: 'center', color: '#333333', padding: 2}}>RSSI: {item.rssi}</Text>
+            <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 2, paddingBottom: 20}}>{item.id}</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.test2(item) }>
+          <View style={[styles.row, {backgroundColor: color2}]}>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+          </View>
+        </TouchableHighlight>
+      </>
     );
   }
 
@@ -277,5 +340,3 @@ const styles = StyleSheet.create({
     margin: 10
   },
 });
-
-export default App;
