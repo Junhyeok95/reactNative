@@ -1,24 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  ScrollView,
-  FlatList,
-  Dimensions,
-  Button,
-  SafeAreaView
-} from 'react-native';
-
+import {Text, View, TouchableHighlight, FlatList, Button} from 'react-native';
 import {
   Platform, PermissionsAndroid, Alert, AppState,
   NativeModules, NativeEventEmitter, } from "react-native";
 import BleManager from 'react-native-ble-manager';
 import Geolocation from 'react-native-geolocation-service';
-
-const window = Dimensions.get('window');
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -49,24 +36,81 @@ const Container = Styled.View`
   
 const App = () => {
 
+  const [scanning, setScanning] = useState<boolean>(false);
+  const [peripherals, setPeripherals] = useState(new Map());
+  const [appState, setAppState] = useState<string>(AppState.currentState);
+
+  // return 필요 변수
+  const list = Array.from(peripherals.values());
+  const btnScanTitle = 'Scan Bluetooth (' + (scanning ? 'on' : 'off') + ')';
+
+  // 인터넷 요구 networks need
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      androidPermissionBluetooth();
+      androidPermissionLocation();
+    }
+
+    // ReactNative AppState handle
+    AppState.addEventListener("change", _handleAppStateChange);
+    BleManager.start({showAlert: false}); // StartOptions 가능, showAlert->ios
+
+    const handlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', _handleDiscoverPeripheral );
+    const handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', _handleStopScan );
+    const handlerDisconnectedPeripheral = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', _handleDisconnectedPeripheral );
+    // // add
+    const handlerConnectedPeripheral = bleManagerEmitter.addListener('BleManagerConnectPeripheral', BleManagerConnectedPeripheral );
+    const handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', _handleUpdateValueForCharacteristic );
+  
+    return () => {
+      console.log("componentWillUnmount ======================");
+      handlerDiscoverPeripheral.remove();
+      handlerStop.remove();
+      handlerDisconnectedPeripheral.remove();
+      handlerConnectedPeripheral.remove();
+      handlerUpdate.remove();
+      AppState.removeEventListener("change", _handleAppStateChange); // AppState 를 이용한 헨들러 컨트롤
+    };
+  
+  },[]);
+
+  // ReactNative AppState handle 재연결 부분
+  const _handleAppStateChange = (nextAppState:any) => {
+    if (appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!')
+      // point
+      BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
+        console.log('Connected peripherals: ' + peripheralsArray.length);
+      });
+    }
+    setAppState(nextAppState);
+  };
+
   // 위치 정보 요청
   const getCurrentlocation = () => {
-    Geolocation.getCurrentPosition((position:any) => {
-      console.log("> 위도 경도 ###########################");
-      // 리턴값이 온다 / 위도와 경도를 position으로 받아옴
-      const { latitude, longitude } = position.coords;
-        // // fetch API를 사용하여서 비동기로 데이터를 받아옴
-        // fetch()
-        // // response.json() 은 res 정보를 JSON 형식으로 promise를 반환
-        // .then(response => response.json())
-        // .then(json => {
-        // })
-        // .catch(error => {
-        //     showError('날씨 정보를 가져오는데 실패' );
-        // });
-    }, (error:any) => {
-      console.log('위치 정보를 가져오는데 실패 / 권한을 확인하자');
+    Geolocation.getCurrentPosition(position => {
+      console.log('위치 정보를 가져오는데 성공');
+    },
+    error => {  
+      console.log('위치 정보를 가져오는데 실패');
     });
+
+    // Geolocation.getCurrentPosition((position:any) => {
+    //   console.log("> 위도 경도 ###########################");
+    //   // 리턴값이 온다 / 위도와 경도를 position으로 받아옴
+    //   const { latitude, longitude } = position.coords;
+    //     // // fetch API를 사용하여서 비동기로 데이터를 받아옴
+    //     // fetch()
+    //     // // response.json() 은 res 정보를 JSON 형식으로 promise를 반환
+    //     // .then(response => response.json())
+    //     // .then(json => {
+    //     // })
+    //     // .catch(error => {
+    //     //     showError('날씨 정보를 가져오는데 실패' );
+    //     // });
+    // }, (error:any) => {
+    //   console.log('위치 정보를 가져오는데 실패 / 권한을 확인하자');
+    // });
   };
 
   // 안드로이드 블루투스 요청
@@ -92,12 +136,10 @@ const App = () => {
       PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => { // check
         if (result) {
           console.log("android LOCATION check OK");
-          getCurrentlocation();
         } else {
           PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => { // request
             if (result) {
               console.log("android LOCATION request Ok");
-              getCurrentlocation();
             } else {
               console.log("android LOCATION reject");
             }
@@ -107,16 +149,21 @@ const App = () => {
     }
   };
 
+  // 반복호출됨
   // 1. Emitter addListener 장치 검색
   const _handleDiscoverPeripheral = (peripheral:any) => {
-    let _peripherals = peripherals;
+    console.log('EEEEEE');
+    console.log(peripheral);
+    console.log('EEEEEE');
+
+    var _peripherals = peripherals;
     console.log('>>> Got ble peripheral');
     console.log(peripheral);
     if (!peripheral.name) { // 이름이 없을 경우
       peripheral.name = 'NO NAME';
     }
     _peripherals.set(peripheral.id, peripheral);
-    setPeripherals( _peripherals );
+    setPeripherals(new Map(_peripherals ));
   };
 
   // 2. Emitter addListener 장치 검색 취소
@@ -126,45 +173,32 @@ const App = () => {
   };
 
   // 3. Emitter addListener 연결 취소 됬을 경우
-  const _handlerDisconnectedPeripheral = (data:any) => {
+  const _handleDisconnectedPeripheral = (data:any) => {
     let _peripherals = peripherals;
     // data 의 peripheral 을 찾아내서 변경
     let _peripheral = _peripherals.get(data.peripheral);
     if (_peripheral) {
       _peripheral.connected = false;
       _peripherals.set(_peripheral.id, _peripheral);
-      setPeripherals({_peripherals});
+      setPeripherals(new Map(_peripherals));
     }
     console.log('>>> Disconnected from ' + data.peripheral);
   };
 
+  // add
   // 3-1. Emitter addListener 연결 됬을 경우 +
   const BleManagerConnectedPeripheral = (data:any) => {
-    console.log('>>> Connected from ' + data.peripheral);
+    console.log("!!!!!!!!!!!!!!!!!!!!! Connected from " + data);
   };
 
   // 4. Emitter addListener 변경?
   const _handleUpdateValueForCharacteristic = (data:any) => {
+    // console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
     console.log('>>> DidUpdateValueForCharacteristic');
     try {
       console.log(data);
     } catch (error) {
     }
-  };
-
-  // ReactNative AppState handle 재연결 부분
-  const _handleAppStateChange = (nextAppState:any) => {
-
-    console.log("테스트 중 ... ");
-
-    // if (appState.match(/inactive|background/) && nextAppState === 'active') {
-    //   console.log('App has come to the foreground!')
-    //   // point
-    //   BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
-    //     console.log('Connected peripherals: ' + peripheralsArray.length);
-    //   });
-    // }
-    // setAppState(nextAppState);
   };
 
   // ========================================================
@@ -198,43 +232,11 @@ const App = () => {
         var __peripheral = results[i];
         __peripheral.connected = true;
         __peripherals.set(__peripheral.id,__peripheral);
-        setPeripherals({__peripheral});
+        setPeripherals(new Map(__peripheral));
       }
     });
   }
   
-  const [scanning, setScanning] = useState<boolean>(false);
-  const [peripherals, setPeripherals] = useState<any>(new Map());
-  const [appState, setAppState] = useState<string>(AppState.currentState);
-
-  useEffect(() => {
-
-    if (Platform.OS === 'android') {
-      androidPermissionBluetooth();
-      androidPermissionLocation();
-    }
-
-    // ReactNative AppState handle
-    AppState.addEventListener("change", _handleAppStateChange);
-    BleManager.start({showAlert: false}); // StartOptions 가능, showAlert->ios
-
-    const handlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', _handleDiscoverPeripheral );
-    const handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', _handleStopScan );
-    const handlerDisconnectedPeripheral = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', _handlerDisconnectedPeripheral );
-    const handlerConnectedPeripheral = bleManagerEmitter.addListener('BleManagerConnectPeripheral', BleManagerConnectedPeripheral );
-    const handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', _handleUpdateValueForCharacteristic );
-  
-    return () => {
-      console.log("componentWillUnmount ======================");
-      handlerDiscoverPeripheral.remove();
-      handlerStop.remove();
-      handlerDisconnectedPeripheral.remove();
-      handlerConnectedPeripheral.remove();
-      handlerUpdate.remove();
-      AppState.removeEventListener("change", _handleAppStateChange); // AppState 를 이용한 헨들러 컨트롤
-    };
-  
-  },[]);
 
 
   function test(peripheral:any) {
@@ -258,7 +260,7 @@ const App = () => {
           if (p) {
             p.connected = true;
             _peripherals.set(peripheral.id, p);
-            setPeripherals({peripherals});
+            setPeripherals(new Map(peripherals));
           }
           console.log('Connected to ' + peripheral.id); // 연결됨
 
@@ -273,43 +275,41 @@ const App = () => {
               });
             });*/
 
-            // Test using bleno's pizza example
-            // https://github.com/sandeepmistry/bleno/tree/master/examples/pizza
-            // BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
-            //   console.log(peripheralInfo);
-            //   var service = '13333333-3333-3333-3333-333333333337';
-            //   var bakeCharacteristic = '13333333-3333-3333-3333-333333330003';
-            //   var crustCharacteristic = '13333333-3333-3333-3333-333333330001';
+            BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
+              console.log(peripheralInfo);
+              var service = '13333333-3333-3333-3333-333333333338';
+              var bakeCharacteristic = '13333333-3333-3333-3333-333333330003';
+              var crustCharacteristic = '13333333-3333-3333-3333-333333330001';
 
-            //   setTimeout(() => {
-            //     BleManager.startNotification(peripheral.id, service, bakeCharacteristic).then(() => {
-            //       console.log('Started notification on ' + peripheral.id);
-            //       setTimeout(() => {
-            //         BleManager.write(peripheral.id, service, crustCharacteristic, [0]).then(() => {
-            //           console.log('Writed NORMAL crust');
-            //           BleManager.write(peripheral.id, service, bakeCharacteristic, [1,95]).then(() => {
-            //             console.log('Writed 351 temperature, the pizza should be BAKED');
-            //             /*
-            //             var PizzaBakeResult = {
-            //               HALF_BAKED: 0,
-            //               BAKED:      1,
-            //               CRISPY:     2,
-            //               BURNT:      3,
-            //               ON_FIRE:    4
-            //             };*/
-            //           });
-            //         });
+              setTimeout(() => {
+                BleManager.startNotification(peripheral.id, service, bakeCharacteristic).then(() => {
+                  console.log('Started notification on ' + peripheral.id);
+                  setTimeout(() => {
+                    BleManager.write(peripheral.id, service, crustCharacteristic, [0]).then(() => {
+                      console.log('Writed NORMAL crust');
+                      BleManager.write(peripheral.id, service, bakeCharacteristic, [1,10]).then(() => {
+                        console.log('Writed 351 temperature, the pizza should be BAKED');
+                        /*
+                        var PizzaBakeResult = {
+                          HALF_BAKED: 0,
+                          BAKED:      1,
+                          CRISPY:     2,
+                          BURNT:      3,
+                          ON_FIRE:    4
+                        };*/
+                      });
+                    });
 
-            //       }, 500);
-            //     }).catch((error) => {
-            //       console.log('Notification error', error);
-            //     });
-            //   }, 200);
-            // });
+                  }, 500);
+                }).catch((error) => {
+                  console.log('Notification error', error);
+                });
+              }, 200);
+            });
 
             console.log('good good'); // 연결됨
 
-          }, 3000);
+          }, 1000);
 
         }).catch((error) => { // connect .then
           console.log('Connection error', error);
@@ -334,10 +334,7 @@ const App = () => {
     );
   }
 
-  // return 필요 변수
-  const list = Array.from(peripherals.values());
-  const btnScanTitle = 'Scan Bluetooth (' + (scanning ? 'on' : 'off') + ')';
-  console.log("init--------------------------------");
+  
   return (
     <ContainerContainer>
       <Container>
@@ -358,15 +355,30 @@ const App = () => {
         </View2>
 
         <View style={{margin: 10}}>
-          <Button title="checkState" onPress={() => {
+          <Button title="androidPermissionBluetooth" onPress={() => {
             androidPermissionBluetooth();
             console.log(BleManager.checkState());
           }} />
         </View>
 
+        <View style={{margin: 10}}>
+          <Button title="getCurrentlocation" onPress={() => {
+            getCurrentlocation();
+            console.log(BleManager.checkState());
+          }} />
+        </View>
+
+        <View style={{margin: 10}}>
+          <Button title="androidPermissionLocation" onPress={() => {
+            androidPermissionLocation();
+            console.log(BleManager.checkState());
+          }} />
+        </View>
+
+        
+
         <ButtonContainer>
           <View style={{ margin: 10}}>
-            {/* <Button title={btnScanTitle} onPress={() => {} } /> */}
             <Button title={btnScanTitle} onPress={() => _startScan() } />
           </View>
         </ButtonContainer>
