@@ -16,21 +16,22 @@ const ContainerContainer = Styled.View`
   flex-direction: row;
 `;
 const ButtonContainer = Styled.View`
-  height: 100px;
-  backgroundColor: #C5F;
+  backgroundColor: #00FF7F;
   align-items: center;
   justify-content: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
 `;
 const View2 = Styled.View`
   margin: 4px;
   padding: 8px;
   border: 1px solid #000;
-  backgroundColor: #FFC;
+  backgroundColor: #E6E6FA;
 `;
 const FlatListContainer = Styled(FlatList)``;
 const Container = Styled.View`
   flex: 1;
-  backgroundColor: #CFF;
+  backgroundColor: #E0FFFF;
   margin: 2%;
 `;
   
@@ -40,9 +41,11 @@ const App = () => {
   const [peripherals, setPeripherals] = useState(new Map());
   const [appState, setAppState] = useState<string>(AppState.currentState);
 
+  const [connectedPeripheral, setConnectedPeripheral] = useState<string>('');
+
   // return 필요 변수
   const list = Array.from(peripherals.values());
-  const btnScanTitle = 'Scan Bluetooth (' + (scanning ? 'on' : 'off') + ')';
+  const btnScanTitle = '블루투스 검색 (  ' + (scanning ? 'on' : 'off') + '  )';
 
   // 인터넷 요구 networks need
   useEffect(() => {
@@ -58,17 +61,26 @@ const App = () => {
     const handlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', _handleDiscoverPeripheral );
     const handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', _handleStopScan );
     const handlerDisconnectedPeripheral = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', _handleDisconnectedPeripheral );
-    // // add
-    const handlerConnectedPeripheral = bleManagerEmitter.addListener('BleManagerConnectPeripheral', BleManagerConnectedPeripheral );
     const handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', _handleUpdateValueForCharacteristic );
+
+    // // BleManager.connect(peripheral.id) 가 호출되서 성공하면 실행 될 함수
+    // const handlerConnectedPeripheral = bleManagerEmitter.addListener('BleManagerConnectPeripheral', (data) => {
+    //   console.log(data);
+    // });
+    // // BleManager.checkState() 가 호출되면 실행 될 함수
+    // const handlerDidUpdateState = bleManagerEmitter.addListener('BleManagerDidUpdateState', (args) => {
+    //   console.log(args);
+    // });
   
     return () => {
-      console.log("componentWillUnmount ======================");
+      console.log("====================== componentWillUnmount ======================");
       handlerDiscoverPeripheral.remove();
       handlerStop.remove();
       handlerDisconnectedPeripheral.remove();
-      handlerConnectedPeripheral.remove();
       handlerUpdate.remove();
+
+      // handlerConnectedPeripheral.remove();
+      // handlerDidUpdateState.remove();
       AppState.removeEventListener("change", _handleAppStateChange); // AppState 를 이용한 헨들러 컨트롤
     };
   
@@ -152,21 +164,16 @@ const App = () => {
   // 반복호출됨
   // 1. Emitter addListener 장치 검색
   const _handleDiscoverPeripheral = (peripheral:any) => {
-    console.log('EEEEEE');
-    console.log(peripheral);
-    console.log('EEEEEE');
-
-    var _peripherals = peripherals;
-    console.log('>>> Got ble peripheral');
-    console.log(peripheral);
+    console.log('>>> Got ble peripheral : ', peripheral.id);
+    let _peripherals = peripherals;
     if (!peripheral.name) { // 이름이 없을 경우
       peripheral.name = 'NO NAME';
     }
     _peripherals.set(peripheral.id, peripheral);
-    setPeripherals(new Map(_peripherals ));
+    setPeripherals( new Map(_peripherals) );
   };
 
-  // 2. Emitter addListener 장치 검색 취소
+  // 2. Emitter addListener 장치 검색 취소 BleManagerStopScan 중지되면 실행
   const _handleStopScan = () => {
     console.log('========= Scan stopped =========');
     setScanning(false);
@@ -185,18 +192,15 @@ const App = () => {
     console.log('>>> Disconnected from ' + data.peripheral);
   };
 
-  // add
-  // 3-1. Emitter addListener 연결 됬을 경우 +
-  const BleManagerConnectedPeripheral = (data:any) => {
-    console.log("!!!!!!!!!!!!!!!!!!!!! Connected from " + data);
-  };
-
-  // 4. Emitter addListener 변경?
+  // 4. Emitter addListener 변경
   const _handleUpdateValueForCharacteristic = (data:any) => {
-    // console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+    // 체크하자 value, peripheral, characteristic, service 
     console.log('>>> DidUpdateValueForCharacteristic');
+    console.log('> characteristic / peripheral / service / return value');
     try {
-      console.log(data);
+      if (!data){
+
+      }
     } catch (error) {
     }
   };
@@ -205,47 +209,42 @@ const App = () => {
   // ######                                            ######
   // ========================================================
 
+  // Btn -> 스캔
   const _startScan = () => {
     if (!scanning) {
-      //this.setState({peripherals: new Map()});
       setPeripherals(new Map()); // 기본 장치 값 초기화
-      console.log('========= Scan Start =========');
       BleManager.scan([], 3, true).then((results) => {
         // JSON.stringify(results, null, 5);
         console.log('========= Scanning... =========');
         setScanning(true);
-        console.log(results);
       });
     }
   }
 
-  // ??????????????????????????????????????????????????
+  // Btn -> 장치 재연결
   const _retrieveConnected = () => {
     BleManager.getConnectedPeripherals([]).then((results) => {
       if (results.length == 0) {
         console.log('No connected peripherals');
       }
-      // 하나하나 연결됬다고 변경
       console.log(results);
-      var __peripherals = peripherals;
-      for (var i = 0; i < results.length; i++) {
-        var __peripheral = results[i];
-        __peripheral.connected = true;
-        __peripherals.set(__peripheral.id,__peripheral);
-        setPeripherals(new Map(__peripheral));
+      let _peripherals = peripherals;
+      for (let i = 0; i < results.length; i++) {
+        let _peripheral = results[i];
+        _peripheral.connected = true;
+        _peripherals.set(_peripheral.id, _peripheral);
+        setPeripherals( new Map(_peripherals) );
       }
     });
   }
-  
-
 
   function test(peripheral:any) {
-
     if (peripheral){
       if (peripheral.connected){ // boolean
         BleManager.disconnect(peripheral.id).then(() => {
           // Success code
-          console.log('Disconnected');
+          setConnectedPeripheral('');
+          console.log('----------------------Disconnected');
         })
         .catch((error) => {
           // Failure code
@@ -275,60 +274,44 @@ const App = () => {
               });
             });*/
 
+            /* Test write */
             BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
-              console.log(peripheralInfo);
-              var service = '13333333-3333-3333-3333-333333333338';
+              setConnectedPeripheral(peripheral.id); // 연결된 장치
+              console.log(peripheralInfo); // 이 정보로 코딩
+              var service = '13333333-3333-3333-3333-333333333337';
               var bakeCharacteristic = '13333333-3333-3333-3333-333333330003';
-              var crustCharacteristic = '13333333-3333-3333-3333-333333330001';
+              // var crustCharacteristic = '13333333-3333-3333-3333-333333330001';
+              BleManager.startNotification(peripheral.id, service, bakeCharacteristic).then(() => {
+                console.log('Started notification on ' + peripheral.id);
+                setTimeout(() => {
+                  // BleManager.write(peripheral.id, service, crustCharacteristic, [0]).then(() => {});
 
-              setTimeout(() => {
-                BleManager.startNotification(peripheral.id, service, bakeCharacteristic).then(() => {
-                  console.log('Started notification on ' + peripheral.id);
-                  setTimeout(() => {
-                    BleManager.write(peripheral.id, service, crustCharacteristic, [0]).then(() => {
-                      console.log('Writed NORMAL crust');
-                      BleManager.write(peripheral.id, service, bakeCharacteristic, [1,10]).then(() => {
-                        console.log('Writed 351 temperature, the pizza should be BAKED');
-                        /*
-                        var PizzaBakeResult = {
-                          HALF_BAKED: 0,
-                          BAKED:      1,
-                          CRISPY:     2,
-                          BURNT:      3,
-                          ON_FIRE:    4
-                        };*/
-                      });
-                    });
-
-                  }, 500);
-                }).catch((error) => {
-                  console.log('Notification error', error);
-                });
-              }, 200);
+                  BleManager.write(peripheral.id, service, bakeCharacteristic, [1,10]).then(() => {
+                    console.log('Writed 351 temperature, the pizza should be BAKED');
+                  });
+                }, 500);
+              }).catch((error) => {
+                console.log('Notification error', error);
+              });
             });
 
-            console.log('good good'); // 연결됨
-
           }, 1000);
-
         }).catch((error) => { // connect .then
           console.log('Connection error', error);
         });
       }
     }
-
-
   }
 
   // // FlatList 조건
   const renderItem = (item:any) => {
-    const color = item.connected ? 'green' : '#EEE';
+    const color = item.connected ? '#00BFFF' : '#F5FFFA';
     return (
       <TouchableHighlight onPress={() => { test(item) }}>
-        <View style={{borderWidth: 1, borderColor: '#000', backgroundColor: color, margin: 4}}>
-          <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
-          <Text style={{fontSize: 10, textAlign: 'center', color: '#333333', padding: 2}}>RSSI: {item.rssi}</Text>
-          <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 2, paddingBottom: 20}}>{item.id}</Text>
+        <View style={{borderWidth: 2, borderColor: '#000', backgroundColor: color, margin: 4}}>
+          <Text style={{fontSize: 15, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
+          <Text style={{fontSize: 10, textAlign: 'center', color: '#333333', padding: 1}}>RSSI: {item.rssi}</Text>
+          <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 1, paddingBottom: 10}}>{item.id}</Text>
         </View>
       </TouchableHighlight>
     );
@@ -355,37 +338,53 @@ const App = () => {
         </View2>
 
         <View style={{margin: 10}}>
-          <Button title="androidPermissionBluetooth" onPress={() => {
+          <Button title="안드 블루투스 권한 요청" onPress={() => {
             androidPermissionBluetooth();
-            console.log(BleManager.checkState());
           }} />
         </View>
 
         <View style={{margin: 10}}>
-          <Button title="getCurrentlocation" onPress={() => {
-            getCurrentlocation();
-            console.log(BleManager.checkState());
-          }} />
-        </View>
-
-        <View style={{margin: 10}}>
-          <Button title="androidPermissionLocation" onPress={() => {
+          <Button title="안드 위치정보 권한 요청" onPress={() => {
             androidPermissionLocation();
-            console.log(BleManager.checkState());
           }} />
         </View>
 
-        
+        <View style={{margin: 10}}>
+          <Button title="위치정보 요청" onPress={() => {
+            getCurrentlocation();
+          }} />
+        </View>
+
+        <View style={{margin: 10}}>
+          <Button title="연결된 장치 찾기" onPress={() => _retrieveConnected() } />
+        </View>
 
         <ButtonContainer>
-          <View style={{ margin: 10}}>
+          <View style={{margin: 5}}>
+            <Button title={connectedPeripheral+"\n데이터 요청"} onPress={() => {
+              BleManager.write(connectedPeripheral, '13333333-3333-3333-3333-333333333337', '13333333-3333-3333-3333-333333330003', [1,10]).then(() => {
+                console.log('Writed 351 temperature, the pizza should be BAKED');            
+              });
+            }} />
+          </View>
+        </ButtonContainer>
+
+        <ButtonContainer>
+          <View style={{margin: 5}}>
             <Button title={btnScanTitle} onPress={() => _startScan() } />
           </View>
         </ButtonContainer>
 
         <View style={{margin: 10}}>
-          <Button title="Retrieve connected peripherals" onPress={() => _retrieveConnected() } />
+          <Button title="new" onPress={() => {
+          }} />
         </View>
+
+        <View style={{margin: 10}}>
+          <Button title="new" onPress={() => {
+          }} />
+        </View>
+
       </Container>
 
       <Container>
