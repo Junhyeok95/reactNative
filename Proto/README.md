@@ -3,6 +3,7 @@
 ## 실행
 ```
 npx react-native run-ios / npx react-native run-android
+npx react-native run-ios --simulator="iPhone 11"
 ```
 
 ## 오류 발생 시

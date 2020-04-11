@@ -39,6 +39,8 @@ import Device from './Device';
 import Camera from './Camera';
 import Sensor from './Sensor';
 
+import CustomDrawer from '~/Screens/Drawer';
+
 const TestContainer = () => { return (<></>); }
 
 const Stack = createStackNavigator();
@@ -203,7 +205,7 @@ const MainThirdStackNavi = ({navigation}: DrawerProp) => {
 };
 const MainTabNavi = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBarOptions={{activeTintColor: 'black'}}>
       <Tab.Screen
         name="MainFirstStackNavi"
         component={MainFirstStackNavi}
@@ -358,31 +360,32 @@ const DeviceStackNavi = ({navigation}: DrawerProp) => {
 };
 // DeviceStackNavi ----------------------------------------
 
-const CustomDrawerContent = (
-  props: DrawerContentComponentProps<DrawerContentOptions>,
-  logout: () => void
-) => {
-  return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        // label="Logout"
-        label="로그아웃"
-        onPress={() => logout()}
-      />
-    </DrawerContentScrollView>
-  );
-};
+// const CustomDrawerContent = (
+//   props: DrawerContentComponentProps<DrawerContentOptions>,
+//   logout: () => void
+// ) => {
+//   return (
+//     <DrawerContentScrollView {...props}>
+//       <DrawerItemList {...props} />
+//       <DrawerItem
+//         // label="Logout"
+//         label="로그아웃"
+//         onPress={() => logout()}
+//       />
+//     </DrawerContentScrollView>
+//   );
+// };
 
 const DrawNavi = () => {
   const {logout} = useContext<IUserContext>(UserContext);
 
   return (
     <Drawer.Navigator
-      drawerContent={props => CustomDrawerContent(props, logout)}
-      drawerPosition={"right"}
+      // drawerContent={props => CustomDrawerContent(props, logout)}
+      drawerPosition="right"
       // drawerType={'back'}
       // hideStatusBar={true}
+      drawerContent={props => <CustomDrawer props={props} />}
     >
       <Drawer.Screen
         name="MainTabNavi"
