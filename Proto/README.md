@@ -22,7 +22,6 @@ npm install --save-dev @types/react @types/react-native @types/styled-components
 ```
 tsconfig.json / babel.config.js
 ```
-
 ```
 npm install --save @react-navigation/native
 npm install --save react-native-reanimated react-native-gesture-handler
