@@ -32,5 +32,16 @@ npm install --save @react-navigation/drawer @react-navigation/bottom-tabs
 npm install --save @react-navigation/material-top-tabs react-native-tab-view
 npm install --save @react-native-community/async-storage
 npm install --save react-native-vector-icons
-npm install --save-dev @types/react-native-vector-icons // 수동 연결
+npm install --save-dev @types/react-native-vector-icons // self connection
+```
+```
+npm install -g yo generator-rn-toolbox
+brew install imagemagick
+yo rn-toolbox:assets --icon ./src/Assets/Images/[icon.png] // 1024x1024 png
+yo rn-toolbox:assets --splash ./src/Assets/Images/[splash.psd] // 2208x2208 psd
+```
+```
+npm install --save-dev react-native-dotenv
+npm uninstall --save-dev @types/react-native-dotenv
+npm install --save react-native-geolocation-service react-native-maps
 ```

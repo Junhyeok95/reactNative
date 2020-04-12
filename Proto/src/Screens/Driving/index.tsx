@@ -16,8 +16,8 @@ const Label = Styled.Text`
 const StartButtonContainer = Styled.View`
   background-color: #F00;
   position: absolute;
-  end: 24;
-  bottom: 24;
+  right: 24px;
+  bottom: 24px;
   padding: 8px 16px;
   border-radius: 32px;
 `;

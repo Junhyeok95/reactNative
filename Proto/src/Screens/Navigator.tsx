@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -377,7 +377,7 @@ const DeviceStackNavi = ({navigation}: DrawerProp) => {
 // };
 
 const DrawNavi = () => {
-  const {logout} = useContext<IUserContext>(UserContext);
+  // const {logout} = useContext<IUserContext>(UserContext);
 
   return (
     <Drawer.Navigator
@@ -420,6 +420,7 @@ const RootNavi = () => {
         component={DrawNavi}
         options={{
           headerShown: false, // false == header: null
+          animationEnabled:false,
         }}
       />
       <Stack.Screen name="FullModal" component={Modal} />
