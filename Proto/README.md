@@ -13,6 +13,12 @@ npx react-native start --reset-cache
 ```
 react-native unlink react-native-gesture-handler / pod install
 ```
+```
+# NPM
+watchman watch-del-all
+npm cache clean
+cd android && ./gradlew clean
+```
 
 ### 라이브러리 설치
 ```
@@ -44,4 +50,8 @@ yo rn-toolbox:assets --splash ./src/Assets/Images/[splash.psd] // 2208x2208 psd
 npm install --save-dev react-native-dotenv
 npm uninstall --save-dev @types/react-native-dotenv
 npm install --save react-native-geolocation-service react-native-maps
+```
+```
+npm i --save react-native-ble-manager
+<uses-permission android:name="android.permission.XXX>
 ```

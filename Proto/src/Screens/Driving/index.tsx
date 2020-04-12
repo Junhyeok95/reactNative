@@ -1,6 +1,7 @@
 import React from 'react';
 import Styled from 'styled-components/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {Dimensions} from 'react-native';
 
 import ModalButton from '~/Components/ModalButton';
 
@@ -16,12 +17,12 @@ const Label = Styled.Text`
 const StartButtonContainer = Styled.View`
   background-color: #F00;
   position: absolute;
-  right: 24px;
+  right: 16px;
   bottom: 24px;
-  padding: 8px 16px;
+  padding: 8px 8px;
   border-radius: 32px;
 `;
-
+const ScoreImage = Styled.Image``;
 
 type NavigationProp = StackNavigationProp<MainFirstStackNavi, 'Driving'>;
 
@@ -32,7 +33,14 @@ interface Props {
 const Driving = ({navigation}: Props) => {
   return (
     <Container>
-      <Label>Driving</Label>
+       <ScoreImage
+        source={require('~/Assets/Images/score.png')}
+        style={{
+          width: Dimensions.get('window').width,
+          // height: Dimensions.get('window').height,
+          resizeMode: 'contain'
+        }}
+      />
       <StartButtonContainer>
         <ModalButton style={{flex:1}} font={24} color='#FFF' label="운전 시작" onPress={() => navigation.navigate('Modal')} />
       </StartButtonContainer>

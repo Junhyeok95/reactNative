@@ -12,11 +12,13 @@ type MainFirstStackNavi = {
 type MainSecondStackNavi = {
   Profile: undefined;
   Modal: undefined;
+  ModalList: any;
 };
 
 type MainThirdStackNavi = {
   Setting: undefined;
   Modal: undefined;
+  ModalList: any;
 };
 
 type DrawNaviParamList = {

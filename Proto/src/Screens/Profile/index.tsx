@@ -39,6 +39,15 @@ const Text = Styled.Text`
 `;
 const BR:string = '\n';
 
+const CRUDButtonContainer = Styled.View`
+  background-color: #00F;
+  position: absolute;
+  right: 16px;
+  bottom: 24px;
+  padding: 8px 16px;
+  border-radius: 32px;
+`;
+
 type NavigationProp = StackNavigationProp<MainSecondStackNavi, 'Profile'>;
 
 interface Props {
@@ -94,6 +103,16 @@ const Profile = ({navigation}: Props) => {
         </Text>
       </BackContainer>
       {/* <Button label="Open Full Modal" onPress={() => navigation.navigate('FullModal')} /> */}
+      <CRUDButtonContainer>
+        <ModalButton style={{flex:1}} font={24} color='#FFF' label="CRUD" onPress={() => {
+            navigation.navigate('ModalList', {
+              id: 123,
+              memo: 'abc',
+              list: ['회원정보','비상연락망','의료 정보','손해보험사']
+            });
+          }}
+        />
+      </CRUDButtonContainer>
     </Container>
   );
 };

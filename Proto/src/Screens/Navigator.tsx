@@ -26,6 +26,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import ResetPassword from './ResetPassword';
 import Modal from './Modal';
+import ModalList from './ModalList';
 
 import Driving from './Driving';
 import Profile from './Profile';
@@ -58,7 +59,7 @@ const LoginStackNavi = () => {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#f4511e',
+          backgroundColor: '#446784',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -121,7 +122,7 @@ const MainFirstStackNavi = ({navigation}: DrawerProp) => {
         options={{
           headerBackTitleVisible: false
         }}
-      />
+      />      
     </Stack.Navigator>
   );
 };
@@ -161,6 +162,13 @@ const MainSecondStackNavi = ({navigation}: DrawerProp) => {
           headerBackTitleVisible: false
         }}
       />
+      <Stack.Screen
+        name="ModalList"
+        component={ModalList}
+        options={{
+          headerBackTitleVisible: false
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -196,6 +204,13 @@ const MainThirdStackNavi = ({navigation}: DrawerProp) => {
       <Stack.Screen
         name="Modal"
         component={Modal}
+        options={{
+          headerBackTitleVisible: false
+        }}
+      />
+      <Stack.Screen
+        name="ModalList"
+        component={ModalList}
         options={{
           headerBackTitleVisible: false
         }}

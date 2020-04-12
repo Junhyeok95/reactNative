@@ -4,8 +4,8 @@ import Styled from 'styled-components/native';
 const Container = Styled.View`
   flex: 1;
   width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
   background-color: #FFF;
   border-radius: 8px;
   border-width: 1px;
@@ -14,6 +14,8 @@ const Container = Styled.View`
 `;
 const InputField = Styled.TextInput`
   color: #292929;
+  margin: 0px;
+  padding: 0px;
 `;
 
 interface Props {
