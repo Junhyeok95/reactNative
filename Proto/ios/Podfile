@@ -45,8 +45,6 @@ def flipper_post_install(installer)
 end
 
 target 'Proto' do
-  rn_maps_path = '../node_modules/react-native-maps'
-
   # Pods for Proto
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
@@ -80,8 +78,8 @@ target 'Proto' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation'
-  pod 'react-native-maps', path: rn_maps_path
-  pod 'react-native-google-maps', path: rn_maps_path  # Uncomment this line if you want to support GoogleMaps on iOS
+  pod 'react-native-maps', path: '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', path: '../node_modules/react-native-maps'  # Uncomment this line if you want to support GoogleMaps on iOS
   pod 'GoogleMaps'  # Uncomment this line if you want to support GoogleMaps on iOS
   pod 'Google-Maps-iOS-Utils' # Uncomment this line if you want to support GoogleMaps on iOS
 

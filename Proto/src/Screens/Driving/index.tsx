@@ -14,13 +14,13 @@ const Container = Styled.View`
 const Label = Styled.Text`
   font-size: 32px;
 `;
-const StartButtonContainer = Styled.View`
+const DrivingButtonContainer = Styled.View`
   background-color: #F00;
   position: absolute;
-  right: 16px;
+  right: 12px;
   bottom: 24px;
   padding: 8px 8px;
-  border-radius: 32px;
+  border-radius: 24px;
 `;
 const ScoreImage = Styled.Image``;
 
@@ -41,9 +41,14 @@ const Driving = ({navigation}: Props) => {
           resizeMode: 'contain'
         }}
       />
-      <StartButtonContainer>
-        <ModalButton style={{flex:1}} font={24} color='#FFF' label="운전 시작" onPress={() => navigation.navigate('Modal')} />
-      </StartButtonContainer>
+      <DrivingButtonContainer>
+        <ModalButton
+          style={{flex:1}}
+          font={24}
+          color='#FFF'
+          label="운전 시작"
+          onPress={() => navigation.navigate('MapStackNavi')} />
+      </DrivingButtonContainer>
     </Container>
   );
 };

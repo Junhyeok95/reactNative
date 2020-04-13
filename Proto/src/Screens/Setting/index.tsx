@@ -42,10 +42,10 @@ const BR:string = '\n';
 const CRUDButtonContainer = Styled.View`
   background-color: #00F;
   position: absolute;
-  right: 16px;
+  right: 12px;
   bottom: 24px;
   padding: 8px 16px;
-  border-radius: 32px;
+  border-radius: 24px;
 `;
 
 type NavigationProp = StackNavigationProp<MainThirdStackNavi, 'Setting'>;
@@ -60,7 +60,7 @@ const Setting = ({navigation}: Props) => {
       <BackContainer>
         <LabelContainer>
           <Label>기기 정보</Label>
-          <ModalButton label="기기 연결" onPress={() => navigation.navigate('Modal')} />
+          <ModalButton label="기기 연결" onPress={() => navigation.navigate('DeviceStackNavi')} />
         </LabelContainer>
         <Text>
           기기 코드

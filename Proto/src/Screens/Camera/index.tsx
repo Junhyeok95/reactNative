@@ -16,13 +16,16 @@ const Absolute = Styled.View`
   top: 16px;
   right: 16px;
 `;
+const TouchableOpacity = Styled.TouchableOpacity``;
 
 const Camera = () => {
   return (
     <Container>
       <Icon name="face" color={'#333'} size={400} />
       <Absolute>
+        <TouchableOpacity>
         <Icon name="sync" color={'#00F'} size={50} />
+        </TouchableOpacity>
       </Absolute>
     </Container>
   );

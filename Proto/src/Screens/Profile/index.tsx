@@ -42,10 +42,10 @@ const BR:string = '\n';
 const CRUDButtonContainer = Styled.View`
   background-color: #00F;
   position: absolute;
-  right: 16px;
+  right: 12px;
   bottom: 24px;
   padding: 8px 16px;
-  border-radius: 32px;
+  border-radius: 24px;
 `;
 
 type NavigationProp = StackNavigationProp<MainSecondStackNavi, 'Profile'>;

@@ -7,21 +7,22 @@ import {FlatList, Platform} from 'react-native';
 const TouchableWithoutFeedback = Styled.TouchableWithoutFeedback``;
 const Container = Styled.KeyboardAvoidingView`
   flex: 1;
+  justify-content: center;
   align-items: center;
   background-color: #8CD3C5;
-  padding-top: 24px;
-  padding-bottom: 24px;
 `;
 const BackContainer = Styled.View`
-  flex: 1;
   width: 80%;
+  height: 90%;
   background-color: #FCFCFC;
-  margin-top: 8px;
-  margin-bottom: 8px;
   padding: 12px;
   border-width: 1px;
   border-color: #DDD;
   box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3);
+`;
+const ItemView = Styled.View`
+  flex: 1;
+  margin-bottom: 8px;
 `;
 const LabelContainer = Styled.View`
   flex-direction: row;
@@ -31,6 +32,7 @@ const LabelContainer = Styled.View`
 const Label = Styled.Text`
   color: #000;
   font-size: 24px;
+  margin-bottom: 4px;
 `;
 const InputContainer = Styled.View`
   flex: 1;
@@ -70,7 +72,7 @@ const ModalList = ({navigation, route}: Props) => {
   const renderEmpty = () => <EmptyItem><Text>NO List</Text></EmptyItem>
   const renderItem = ({ item, index }) => {
     return (
-      <>
+      <ItemView>
         <LabelContainer>
           <Label>{item}</Label>
         </LabelContainer>
@@ -80,7 +82,7 @@ const ModalList = ({navigation, route}: Props) => {
             placeholder={''}
           />
         </InputContainer>
-      </>
+      </ItemView>
     );
   };
 
@@ -95,7 +97,7 @@ const ModalList = ({navigation, route}: Props) => {
             data={labelList}
             ListEmptyComponent={renderEmpty} // data 배열이 없을 경우 표시되는 컴포넌트
             renderItem={renderItem}
-            />
+          />
         </BackContainer>
       </Container>
       </TouchableWithoutFeedback>

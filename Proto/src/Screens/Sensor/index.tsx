@@ -16,13 +16,16 @@ const Absolute = Styled.View`
   top: 16px;
   right: 16px;
 `;
+const TouchableOpacity = Styled.TouchableOpacity``;
 
 const Sensor = () => {
   return (
     <Container>
       <Icon name="drive-eta" color={'#333'} size={400} />
       <Absolute>
-        <Icon name="memory" color={'#00F'} size={50} />
+        <TouchableOpacity>
+          <Icon name="memory" color={'#00F'} size={50} />
+        </TouchableOpacity>
       </Absolute>
     </Container>
   );
