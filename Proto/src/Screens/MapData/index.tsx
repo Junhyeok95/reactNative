@@ -25,16 +25,22 @@ const DeviceButtonContainer = Styled.View`
   border-radius: 24px;
 `;
 
+interface IGeolocation {
+  latitude: number;
+  longitude: number;
+}
+
 const MapData = () => {
 
   const [device, setDevice] = useState<boolean>(false);
   const [driving, setDriving] = useState<boolean>(false);
-  
-  console.log(Platform.OS === 'ios');
+  const [location, setLocation] = useState<IGeolocation>({
+    latitude: 35.896311,
+    longitude: 128.622051,
+  });
 
   useEffect(() => {
-    
-    console.log("Effect");
+    console.log("Effect, MapDate 여기 윗부분 호출 많이됨");
 
     if (Platform.OS === 'android') {
       Alert.alert('Google KEY 발급 대기중');
@@ -45,15 +51,33 @@ const MapData = () => {
     <Container>
       <MapView style={{flex: 1}}
         initialRegion={{
-          latitude: 35.896311,
-          longitude: 128.622051,
+          latitude: location.latitude,
+          longitude: location.longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
-      }}>
+        }}
+        onRegionChange={region => {
+          setLocation({
+            latitude: region.latitude,
+            longitude: region.longitude,
+          });
+        }}
+        onRegionChangeComplete={region => {
+          setLocation({
+            latitude: region.latitude,
+            longitude: region.longitude,
+          });
+        }}
+      >
         <Marker
           coordinate={{latitude: 35.896311, longitude: 128.622051}}
           title="영진 전문 대학교"
           description="this is example"
+        />
+        <Marker
+          coordinate={{latitude: location.latitude, longitude: location.longitude}}
+          title="Test Maker"
+          description="Test"
         />
       </MapView>
       <DeviceButtonContainer style={{backgroundColor: device?'#00F':'#555'}}>

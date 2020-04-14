@@ -53,6 +53,7 @@ const Device = () => {
   const btnScanTitle = '블루투스 검색\n   (  ' + (scanning ? 'ON' : 'OFF') + '  )';
 
   useEffect(() => {
+    console.log("mount");
     if (Platform.OS === 'android') {
       androidPermissionBluetooth();
       androidPermissionLocation();

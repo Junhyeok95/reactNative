@@ -17,6 +17,17 @@ const Absolute = Styled.View`
   right: 16px;
 `;
 const TouchableOpacity = Styled.TouchableOpacity``;
+const CameraControlContainer= Styled.View`
+  position: absolute;
+  bottom: 48px;
+  flex-direction: row;
+`;
+const ControlButton = Styled.TouchableOpacity`
+  flex: 1;
+  border-width: 1px;
+  align-items: center;
+  margin: 0 16px;
+`;
 
 const Camera = () => {
   return (
@@ -27,6 +38,20 @@ const Camera = () => {
         <Icon name="sync" color={'#00F'} size={50} />
         </TouchableOpacity>
       </Absolute>
+      <CameraControlContainer>
+        <ControlButton>
+          <Label>왼</Label>
+        </ControlButton>
+        <ControlButton>
+          <Label>왼</Label>
+        </ControlButton>
+        <ControlButton>
+          <Label>왼</Label>
+        </ControlButton>
+        <ControlButton>
+          <Label>왼</Label>
+        </ControlButton>
+      </CameraControlContainer>
     </Container>
   );
 };
