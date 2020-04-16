@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
-import {KEY} from 'react-native-dotenv'
-import MapView, {PROVIDER_GOOGLE, Marker, Callout, Circle, AnimatedRegion, Animated} from 'react-native-maps';
+// import {KEY} from 'react-native-dotenv'
+import MapView, {PROVIDER_GOOGLE, Marker, Callout, Circle, AnimatedRegion} from 'react-native-maps';
 import {Platform, Alert} from "react-native";
 import Geolocation from 'react-native-geolocation-service';
 
@@ -50,6 +50,8 @@ interface ILocation {
 interface IGeolocation {
   latitude: number;
   longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
 }
 
 const MapMarker = () => {
@@ -58,9 +60,25 @@ const MapMarker = () => {
   const [location, setLocation] = useState<IGeolocation>({
     latitude: 35.896311,
     longitude: 128.622051,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
   });
 
   let _watchId: number;
+
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        const {latitudeDelta, longitudeDelta} = location;
+        setLocation({latitude, longitude, latitudeDelta, longitudeDelta});
+        console.log("getCurrent");
+      },
+      error => {
+        console.log("getCurrent error");
+      }
+    );
+  };
 
   useEffect(() => {
     _watchId = Geolocation.watchPosition(
@@ -80,6 +98,7 @@ const MapMarker = () => {
     );
   }, [locations]);
 
+
   useEffect(() => {
     if (Platform.OS === 'android') {
       Alert.alert('Google KEY 발급 대기중');
@@ -91,14 +110,42 @@ const MapMarker = () => {
     }
   },[]); 
 
+  let [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let id = setInterval(() => {
+      setCount(count + 1);
+      console.log("count",count);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
   return (Platform.OS === 'ios') ? (
     <Container>
-      {/* <MapView style={{flex: 1}}
+      <MapView style={{flex: 1}}
         initialRegion={{
           latitude: 35.896311,
           longitude: 128.622051,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
+        }}
+        region={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: location.latitudeDelta,
+          longitudeDelta: location.longitudeDelta,
+        }}
+        // onRegionChange={region => {
+        //   setLocation({
+        //   });
+        // }}
+        onRegionChangeComplete={region => {
+          setLocation({
+            latitude: region.latitude,
+            longitude: region.longitude,
+            latitudeDelta: region.latitudeDelta,
+            longitudeDelta: region.longitudeDelta,
+          });
         }}
       >
         <Marker
@@ -106,8 +153,8 @@ const MapMarker = () => {
           title="영진 전문 대학교"
           description="this is example"
         />
-      </MapView> */}
-      {locations.length > 0 && (
+      </MapView>
+      {/* {locations.length > 0 && (
         <MapView
           style={{flex: 1}}
           initialRegion={{
@@ -141,37 +188,40 @@ const MapMarker = () => {
             />
           ))}
         </MapView>
-      )}
+      )} */}
       <TestLeftButtonContainer>
         <ModalButton
           style={{flex:1, marginLeft:16, marginRight:16}}
-          label="LEFT"
+          label="영진으로"
           color='#FFF'
           onPress={() => {
-            Alert.alert('LEFT');
+            // Alert.alert('LEFT');
+            setLocation({
+              latitude: 35.896311,
+              longitude: 128.622051,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            });
           }}
         />
       </TestLeftButtonContainer>
       <TestCenterButtonContainer>
         <ModalButton
           style={{flex:1, marginLeft:16, marginRight:16}}
-          label={"RESET\n"+location.latitude+", "+location.longitude}
+          label={location.latitude+"\n"+location.longitude+"\n"+location.latitudeDelta+"\n"+location.longitudeDelta}
           color='#FFF'
           onPress={() => {
-            setLocation({
-              latitude: 35.896311,
-              longitude: 128.622051,
-            });
           }}
         />
       </TestCenterButtonContainer>
       <TestRightButtonContainer>
         <ModalButton
           style={{flex:1, marginLeft:16, marginRight:16}}
-          label="RIGHT"
+          label="내위치로"
           color='#FFF'
           onPress={() => {
-            Alert.alert('RIGHT');
+            getCurrentLocation();
+            // Alert.alert('RIGHT');
           }}
         />
       </TestRightButtonContainer>
