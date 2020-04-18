@@ -3,7 +3,7 @@
 npm install --save-dev @bam.tech/react-native-make
 npm install --save react-native-splash-screen
 react-native set-splash --path ./splash.png --resize center --background "#FFFFFF"
-react-native set-icon --path ./bluetooth.png --background "#FFFFFF"
+react-native set-icon --path ./icon.png --background "#FFFFFF"
 ```
 ## 타입스크립트, 바벨
 ```
@@ -31,7 +31,8 @@ npm install --save react-native-ble-manager
 <key>NSBluetoothAlwaysUsageDescription</key>
 <key>UIBackgroundModes</key>
 ```
-# 읽기 쓰기
+# 읽기 쓰기, 저장
 ```
+npm install --save @react-native-community/async-storage
 npm install --save buffer convert-string
 ```

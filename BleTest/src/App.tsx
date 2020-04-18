@@ -3,6 +3,8 @@ import React, {useEffect} from 'react';
 import Navigator from '~/Screens/Navigator';
 import SplashScreen from 'react-native-splash-screen'
 
+import {ContextProvider} from '~/Context/Rasb';
+
 const App = () => {
   useEffect(()=> {
     setTimeout(() => {
@@ -11,7 +13,9 @@ const App = () => {
   },[]);
   
   return (
-    <Navigator />
+    <ContextProvider>
+      <Navigator />
+    </ContextProvider>
   );
 };
 
