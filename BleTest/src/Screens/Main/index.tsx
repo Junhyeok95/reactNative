@@ -36,12 +36,12 @@ interface Props {
 }
 
 const Main = ({navigation}: Props) => {
-  const {login, info} = useContext<IContext>(Context);
+  const {login, info} = useContext<IContext>(Context); 
 
   return (
     <Container>
       <View>
-        {info ? <Label>{info}님 환영합니다</Label> : <Label> 안녕하세요 </Label>}
+        {info ? <Label>> {info}님 환영합니다</Label> : <Label>> 안녕하세요 </Label>}
       </View>
       <Button
         onPress={() => navigation.navigate('BLE')}

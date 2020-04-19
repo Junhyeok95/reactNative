@@ -6,6 +6,7 @@ const defaultContext: IContext = {
   login: (email: string) => {},
   getInfo: () => {},
   logout: () => {},
+  raspData: "rarara",
 };
 
 const Context = createContext(defaultContext);
@@ -16,6 +17,7 @@ interface Props {
 
 const ContextProvider = ({children}: Props) => {
   const [info, setInfo] = useState<IInfo | undefined>(undefined);
+  const [raspData, setRaspData] = useState<string>("");
 
   const login = (email: string): void => {
     AsyncStorage.setItem('token', 'let data = JSON.stringify()').then((data) => {
@@ -58,6 +60,7 @@ const ContextProvider = ({children}: Props) => {
         login,
         getInfo,
         logout,
+        raspData,
       }}>
       {children}
     </Context.Provider>

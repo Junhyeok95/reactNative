@@ -7,4 +7,5 @@ interface IContext {
   login: (email: string) => void;
   getInfo: () => void;
   logout: () => void;
+  raspData?: string;
 }

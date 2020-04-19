@@ -27,6 +27,14 @@ const TouchableOpacity2 = Styled.TouchableOpacity`
 const Label = Styled.Text`
   font-size: 24px;
 `;
+const View = Styled.View`
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+const RaspView = Styled.View`
+  background-color: #0F0;
+`;
 
 type NavigationProp = StackNavigationProp<{
   Data: undefined;
@@ -39,7 +47,7 @@ interface Props {
 }
 
 const Data = ({navigation}: Props) => {
-  const {logout} = useContext<IContext>(Context); // 프로바이더에서 타입을 정해서 만들어둠
+  const {logout, raspData} = useContext<IContext>(Context); // 프로바이더에서 타입을 정해서 만들어둠
 
   useEffect(() => {
     console.log("Data useEffect");
@@ -47,6 +55,12 @@ const Data = ({navigation}: Props) => {
 
   return (
     <Container>
+      <View>
+        <Label>BLE DATA</Label>
+        <RaspView>
+          <Label>>>> {raspData}</Label>
+        </RaspView>
+      </View>
       <TouchableOpacity onPress={() => navigation.navigate('Connect')}>
         <Label>Connect 로 이동</Label>
       </TouchableOpacity>

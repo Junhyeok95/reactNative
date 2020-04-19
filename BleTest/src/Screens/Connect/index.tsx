@@ -35,7 +35,10 @@ interface Props {
   navigation: NavigationProp;
 }
 
-const Connect = ({navigation}: Props) => {
+const Connect = ({navigation} : Props) => {
+  console.log(">>>>>>>>>>>>>>>>navigation");
+  const asdf = navigation.navigate;
+  console.log(asdf);
 
   useEffect(() => {
     console.log("Connect useEffect");
@@ -43,9 +46,11 @@ const Connect = ({navigation}: Props) => {
 
   return (
     <Container>
-      <TouchableOpacity2 onPress={() => {}}>
+      <TouchableOpacity onPress={() => {
+        navigation.navigate('Data')
+      }}>
         <Label>이동</Label>
-      </TouchableOpacity2>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('BStackNavi')}>
         <Label>Data 로 이동</Label>
