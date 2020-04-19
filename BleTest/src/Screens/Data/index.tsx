@@ -44,12 +44,15 @@ type NavigationProp = StackNavigationProp<{
 
 interface Props {
   navigation: NavigationProp;
+  route ?: any
 }
 
-const Data = ({navigation}: Props) => {
+const Data = ({navigation, route}: Props) => {
   const {logout, raspData} = useContext<IContext>(Context); // 프로바이더에서 타입을 정해서 만들어둠
 
   useEffect(() => {
+    console.log("Data useEffect");
+    console.log(route);
     console.log("Data useEffect");
   },[]);
 

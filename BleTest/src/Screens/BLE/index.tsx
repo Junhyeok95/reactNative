@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Styled from 'styled-components/native';
 import {FlatList} from 'react-native';
@@ -17,8 +17,6 @@ import Geolocation from 'react-native-geolocation-service';
 
 import {stringToBytes} from 'convert-string';
 import SplashScreen from 'react-native-splash-screen'
-
-import { Context } from '~/Context/Rasb';
 
 const Container = Styled.View`
   flex: 1;
@@ -110,12 +108,10 @@ const BLE = ({navigation}: Props) => {
   const [cnt, setCnt] = useState<number>(0);
   const [str, setStr] = useState<string>('');
 
-  const {raspData} = useContext<IContext>(Context);
-
-  const RASP_SERVICE_UUID = '13333333-3333-3333-3333-333333333310';
-  const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333311';
-  const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333312';
-  const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333313';
+  const MY_SERVICE_UUID = '13333333-3333-3333-3333-333333333307';
+  const NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333301';
+  const READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333302';
+  const WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333303';
   
   useEffect(() => {
     setTimeout(() => {
@@ -171,7 +167,6 @@ const BLE = ({navigation}: Props) => {
     // service, peripheral, characteristic, value
     console.log('>>> DidUpdateValueForCharacteristic');
     setStr(data.value);
-
   };
   
   const startScan = () => {
@@ -216,6 +211,59 @@ const BLE = ({navigation}: Props) => {
     setPeripherals( new Map(_peripherals) );
   };
 
+  const testCode = (peripheral:any) => {
+    if (peripheral){
+      if (peripheral.connected){
+        BleManager.disconnect(peripheral.id).then(() => {
+          setRasp('');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      } else {
+        BleManager.connect(peripheral.id).then(() => { // connect
+          let _peripherals = peripherals;
+          let p = peripherals.get(peripheral.id);
+          if (p) {
+            p.connected = true;
+            _peripherals.set(peripheral.id, p);
+            setPeripherals(new Map(peripherals));
+          }
+          console.log('Connected to ' + peripheral.id); // 연결됨
+  
+          setTimeout(() => { // 1 setTimeout
+            BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
+              setRasp(peripheral.id); // 연결된 장치
+              console.log('>>> peripheralInfo'); // 이 정보로 코딩
+              console.log(peripheralInfo);
+              var service = '13333333-3333-3333-3333-333333333307';
+              var bakeCharacteristic = '13333333-3333-3333-3333-333333330003';
+              var crustCharacteristic = '13333333-3333-3333-3333-333333333301';
+
+              setTimeout(() => { // 2 setTimeout
+                BleManager.startNotification(peripheral.id, MY_SERVICE_UUID, bakeCharacteristic).then(() => {
+                  console.log('Started notification on ' + peripheral.id);
+                  setTimeout(() => { // 3 setTimeout
+                    BleManager.write(peripheral.id, service, crustCharacteristic, [0]).then(() => {
+                      console.log('Writed NORMAL crust');
+                      BleManager.write(peripheral.id, service, bakeCharacteristic, [1,10]).then(() => {
+                        console.log('Writed 351 temperature, the pizza should be BAKED');
+                      });
+                    });
+                  }, 500); // 3 setTimeout
+                }).catch((error) => { // startNotification
+                  console.log('Notification error', error);
+                });
+              }, 200); // 2 setTimeout
+            });
+          }, 800); // 1 setTimeout
+        }).catch((error) => { // connect catch
+          console.log('Connection error', error);
+        });
+      }
+    }
+  };
+
   const connectBtn = (peripheral:any) => {
     if (peripheral){
       if (peripheral.connected){
@@ -243,7 +291,7 @@ const BLE = ({navigation}: Props) => {
               console.log(peripheralInfo);
 
               setTimeout(() => { // 2 setTimeout
-                BleManager.startNotification(peripheral.id, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+                BleManager.startNotification(peripheral.id, MY_SERVICE_UUID, NOTIFY_CHARACTERISTIC_UUID).then(() => {
                   console.log('Started notification on ' + peripheral.id);
                 }).catch((error) => { // startNotification
                   console.log('Notification error', error);
@@ -259,7 +307,7 @@ const BLE = ({navigation}: Props) => {
   };
 
   const readBtn = () => {
-    BleManager.read(rasp, RASP_SERVICE_UUID, RASP_READ_CHARACTERISTIC_UUID)
+    BleManager.read(rasp, MY_SERVICE_UUID, READ_CHARACTERISTIC_UUID)
     .then((readData) => {
       // Success code
       console.log('Read: ' + readData);
@@ -278,7 +326,7 @@ const BLE = ({navigation}: Props) => {
     // 'b' array로 감
     const data = stringToBytes('hello월드');
     
-    BleManager.write(rasp, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, data)
+    BleManager.write(rasp, MY_SERVICE_UUID, WRITE_CHARACTERISTIC_UUID, data)
     .then(() => {
       // Success code
       console.log('Write: ' + data);
@@ -312,7 +360,7 @@ const BLE = ({navigation}: Props) => {
       <Container>
         <Header>
           <View>
-            <Button title={"> "+str+" - "+btnScanTitle} onPress={() => startScan() } />
+            <Button title={str+" - "+btnScanTitle} onPress={() => startScan() } />
           </View>
           <View>
             <Button title={"Retrieve connected peripherals"} onPress={() => retrieveConnected() } />

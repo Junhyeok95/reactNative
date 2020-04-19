@@ -4,31 +4,40 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 const Container = Styled.View`
   flex: 1;
-  justify-content: center;
   align-items: center;
 `;
+
+const TouchableOpacity3 = Styled.TouchableOpacity`
+background-color: #CCAAFF;
+align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 10px;
+`;
 const TouchableOpacity2 = Styled.TouchableOpacity`
-  height: 20%;  
   background-color: #AACCFF;
   align-items: center;
   justify-content: center;
-  width: 40%;
   margin: 10px;
+  width: 70%;
 `;
 const TouchableOpacity = Styled.TouchableOpacity`
   justify-content: center;
   background-color: #8CD3C5;
   align-items: center;
-  height: 30%;  
-  width: 50%;
+  margin: 10px;
+  width: 85%;
 `;
 const Label = Styled.Text`
-  font-size: 32px;
+  font-size: 24px;
+  margin: 12px;
 `;
 
 type NavigationProp = StackNavigationProp<{
   Connect: undefined;
-  BStackNavi: undefined; // B -> Data
+  LoginBleAStack: undefined; // AStackNavi 서브
+  ConnectStackNaviLoginBle: undefined; // ConnectStackNavi 서브
+  BStackNavi?: undefined | any; // B -> Data
 }, 'Connect'>;
 
 interface Props {
@@ -46,14 +55,39 @@ const Connect = ({navigation} : Props) => {
 
   return (
     <Container>
-      <TouchableOpacity onPress={() => {
-        navigation.navigate('Data')
+      <TouchableOpacity2 onPress={() => {
+        navigation.navigate('LoginBleAStack')
       }}>
-        <Label>이동</Label>
-      </TouchableOpacity>
+        <Label>AStack -> 서브 {"\n"} LoginBleAStack 로 이동</Label>
+      </TouchableOpacity2>
 
-      <TouchableOpacity onPress={() => navigation.navigate('BStackNavi')}>
-        <Label>Data 로 이동</Label>
+      <TouchableOpacity2 onPress={() => {
+        navigation.navigate('ConnectStackNaviLoginBle')
+      }}>
+        <Label>AStack -> 메인 -> 서브 {"\n"}CSNLB 이동</Label>
+      </TouchableOpacity2>
+    
+      <TouchableOpacity3 onPress={() => {
+        navigation.navigate('BStackNavi');
+      }}>
+        <Label>BStack -> 서브{"\n"}TextView 로 이동</Label>
+      </TouchableOpacity3>
+
+      <TouchableOpacity3 onPress={() => {
+        navigation.navigate('BStackNavi',{
+          id: "sub",
+          memo: 'BStackNavi 메인 -> 서브 이동',
+        });
+      }}>
+        <Label>BStack -> 메인 -> 서브{"\n"}LoginBle 로 이동</Label>
+      </TouchableOpacity3>
+
+      <TouchableOpacity onPress={() => navigation.navigate('BStackNavi',{
+          id: "main",
+          memo: 'BStackNavi 메인 -> 메인 이동',
+      })}>
+        <Label>BStack -> 메인 -> 메인
+          {"\n"}Data 로 이동</Label>
       </TouchableOpacity>
     </Container>
   );

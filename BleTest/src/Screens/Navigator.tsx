@@ -8,35 +8,76 @@ import BLE from '~/Screens/BLE';
 import Data from '~/Screens/Data';
 import Connect from '~/Screens/Connect';
 import SplashScreen from 'react-native-splash-screen'
+import LoginBle from '~/Screens/BLE';
 
 import { Context } from '~/Context/Rasb';
+import Styled from 'styled-components/native';
+const View = Styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: #DDD;
+`;
+const Text = Styled.Text`
+  font-size: 32px;
+`;
 
 const Stack = createStackNavigator();
 
+const TestView = () => { return (<View><Text>뒤로가기</Text></View>); }
+
+interface Props {
+  route ?: any;
+}
+
 ////////// ////////// ////////// ////////// //////////
 
-const DataStackNavi = () => {
+const DataStackNavi = ({route}:Props) => {
+  let stackId:string = route.params.stackId;
   useEffect(() => {
     console.log("DataStackNavi useEffect");
+    console.log(route);
   },[]);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName={ stackId == "main" ? "Data" : "LoginBle" }
+      >
       <Stack.Screen     
         name="Data"
         component={Data}
       />
+      <Stack.Screen     
+        name="LoginBle"
+        component={LoginBle}
+      />
     </Stack.Navigator>
   );
 };
-const BStackNavi = () => {
+const BStackNavi = ({route}:Props) => {
+  console.log(route.params);
+  let check:boolean;
+  let stackId:string = '';
+  if (route.params==undefined) check = true;
+    else {
+      check = false;
+      stackId=route.params.id;
+    }
+
   useEffect(() => {
     console.log("BStackNavi useEffect");
   },[]);
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName={ route.params==undefined ? "TestView" : "DataStackNavi" }>
+      <Stack.Screen     
+        name="TestView"
+        component={TestView}
+      />
       <Stack.Screen     
         name="DataStackNavi"
         component={DataStackNavi}
+        initialParams={{stackId}}
       />
     </Stack.Navigator>
   );
@@ -54,10 +95,24 @@ const ConnectStackNavi = () => {
         name="Connect"
         component={Connect}
       />
+      <Stack.Screen     
+        name="ConnectStackNaviLoginBle"
+        component={TestView}
+      />
     </Stack.Navigator>
   );
 };
-const AStackNavi = () => {
+////////// ////////// ////////// ////////// //////////
+import {StackNavigationProp} from '@react-navigation/stack';
+type NavigationProp = StackNavigationProp<{
+  Data: undefined;
+}, 'Data'>;
+
+interface Props {
+  navigation: NavigationProp;
+}
+////////// ////////// ////////// ////////// //////////
+const AStackNavi = ({navigation} : Props) => {
   useEffect(() => {
     console.log("AStackNavi useEffect");
   },[]);
@@ -66,6 +121,12 @@ const AStackNavi = () => {
       <Stack.Screen     
         name="ConnectStackNavi"
         component={ConnectStackNavi}
+        options={{
+        }}
+      />
+      <Stack.Screen     
+        name="LoginBleAStack"
+        component={TestView}
         options={{
         }}
       />
@@ -78,7 +139,7 @@ const AStackNavi = () => {
 const TestStackNavi = () => {
 
   useEffect(() => {
-    console.log("TestStackNavi useEffect");
+    console.log(">>>>> TestStackNavi useEffect");
   },[]);
 
   return (
@@ -95,11 +156,12 @@ const TestStackNavi = () => {
   );
 };
 
+
 ////////// ////////// ////////// ////////// //////////
 const RootNavi = () => {
 
   useEffect(()=> {
-    console.log("RootNavi useEffect");
+    console.log(">>>>> >>>>> RootNavi useEffect");
     setTimeout(() => {
       SplashScreen.hide();
     }, 1000);
@@ -137,7 +199,7 @@ export default () => {
 
   useEffect(()=> {
     console.log(info);
-    console.log("Navigator useEffect");
+    console.log(">>> 최종 ... >>>Navigator useEffect");
   },[]);
 
   return (
