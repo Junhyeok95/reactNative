@@ -48,18 +48,19 @@ interface Props {
 }
 
 const Data = ({navigation, route}: Props) => {
-  const {logout, raspData} = useContext<IContext>(Context); // 프로바이더에서 타입을 정해서 만들어둠
-
+  const {logout, raspData, jcnt} = useContext<IContext>(Context); // 프로바이더에서 타입을 정해서 만들어둠
+  // 변화를 체크중이므로 getJcnt ㄱ ㅏ아닌 그냥 jcnt 해도된다
+  
   useEffect(() => {
     console.log("Data useEffect");
     console.log(route);
-    console.log("Data useEffect");
   },[]);
 
   return (
     <Container>
       <View>
         <Label>BLE DATA</Label>
+        <Label>>> time {jcnt}</Label>
         <RaspView>
           <Label>>>> {raspData}</Label>
         </RaspView>

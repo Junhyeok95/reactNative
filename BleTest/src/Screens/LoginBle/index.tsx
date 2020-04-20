@@ -56,6 +56,16 @@ const FlatListContainer = Styled(FlatList)`
   background-color: #FFF;
 `;
 
+const TouchableOpacity = Styled.TouchableOpacity`
+  padding: 8px;
+  background-color: #F00;
+`;
+
+const Label = Styled.Text`
+  font-size: 24px;
+  color: #000;
+`;
+
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 const Text = Styled.Text``;
@@ -110,7 +120,9 @@ const BLE = ({navigation}: Props) => {
   const [cnt, setCnt] = useState<number>(0);
   const [str, setStr] = useState<string>('');
 
-  const {raspData} = useContext<IContext>(Context);
+                                // jcnt 가 선언과 동시에 고정되므로
+                                // getJcnt를 이용해서 가저온다 ..
+  const {raspData, setRaspDatas, getMyCnts, setMyCnt} = useContext<IContext>(Context);
 
   const RASP_SERVICE_UUID = '13333333-3333-3333-3333-333333333310';
   const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333311';
@@ -118,6 +130,7 @@ const BLE = ({navigation}: Props) => {
   const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333313';
   
   useEffect(() => {
+    console.log("################################");
     setTimeout(() => {
       SplashScreen.hide();
     }, 1000);
@@ -129,13 +142,14 @@ const BLE = ({navigation}: Props) => {
     const handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', handleStopScan );
     const handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral );
     const handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', handleUpdateValueForCharacteristic );
-
+    
     if (Platform.OS === 'android') {
       androidPermissionBluetooth();
       androidPermissionLocation();
     }
-
+    
     return () => {
+      console.log("un ################################");
       handlerDiscover.remove();
       handlerStop.remove();
       handlerDisconnect.remove();
@@ -149,7 +163,7 @@ const BLE = ({navigation}: Props) => {
     if (appState.match(/inactive|background/) && nextAppState === 'active') {
       console.log('App has come to the foreground!')
       BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
-        console.log('Connected peripherals: ' + peripheralsArray.length);
+        console.log('### 연결된 Connected peripherals: ' + peripheralsArray.length);
       });
     }
     setAppState(nextAppState);
@@ -167,17 +181,31 @@ const BLE = ({navigation}: Props) => {
     console.log('>>> Disconnected from ' + data.peripheral);
   };
 
+  var myGlobalCnt = 0;
   const handleUpdateValueForCharacteristic = (data:any) => {
     // service, peripheral, characteristic, value
     console.log('>>> DidUpdateValueForCharacteristic');
     setStr(data.value);
+    console.log('Json >>>>>>>>>> ',JSON.stringify(data.value));
+    // 여기선 불러도 실시간 상황이 아님
+    // console.log('>>> rasb data = ' + raspData); 
+    // 여기선 불러도 실시간 상황이 아님
 
+    // let tempCnt = getMyCnts(); // 값 가저옴
+    // console.log('tempCnt >>>>>>>>>> '+ tempCnt);
+    // 이것도 실패
+    myGlobalCnt++;
+    setMyCnt( myGlobalCnt );
+    console.log('myGlobalCnt >>>>>>>>>> '+ myGlobalCnt);
+    if(data.value[0]){
+      setRaspDatas("WDJ _ CNT -> " + data.value[0]);
+    }
   };
   
   const startScan = () => {
     if (!scanning) {
       setPeripherals(new Map()); // 기본 장치 값 초기화
-      BleManager.scan([], 3, true).then((results) => {
+      BleManager.scan([], 3, false).then((results) => {
         console.log('========= Scanning... =========');
         setScanning(true);
       });
@@ -238,7 +266,7 @@ const BLE = ({navigation}: Props) => {
   
           setTimeout(() => { // 1 setTimeout
             BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
-              setRasp(peripheral.id); // 연결된 장치
+              setRasp(peripheral.id); // 연결된 장치의 상세한 값 검색
               console.log("retrieveServices");
               console.log(peripheralInfo);
 
@@ -310,12 +338,15 @@ const BLE = ({navigation}: Props) => {
   return (
     <SafeAreaView>
       <Container>
+      <TouchableOpacity onPress={() => navigation.navigate('Data')}>
+        <Label>Connect 로 이동</Label>
+      </TouchableOpacity>
         <Header>
           <View>
             <Button title={"> "+str+" - "+btnScanTitle} onPress={() => startScan() } />
           </View>
           <View>
-            <Button title={"Retrieve connected peripherals"} onPress={() => retrieveConnected() } />
+            <Button title={"Retrieve connected"+raspData} onPress={() => retrieveConnected() } />
           </View>
         </Header>
         <FlatListContainer
@@ -323,7 +354,7 @@ const BLE = ({navigation}: Props) => {
           renderItem={({ item }) => renderItem(item) }
           keyExtractor={item => item.id}
           ListEmptyComponent={
-            <View style={{flex:1, justifyContent: 'center', margin: 20, height: 80}}>
+            <View style={{flex:1, justifyContent: 'center', margin: 6, height: 80}}>
               <Text style={{textAlign: 'center'}}>No peripherals</Text>
             </View>
           }
@@ -338,6 +369,12 @@ const BLE = ({navigation}: Props) => {
             </View>
             <View>
             <Button title="writeBtn" onPress={() => writeBtn() } />
+            </View>
+            <View style={{backgroundColor: '#ADF'}}>
+              <Button title="read sub" onPress={() => readBtn() } />
+            </View>
+            <View style={{backgroundColor: '#FDA'}}>
+              <Button title="write sub" onPress={() => readBtn() } />
             </View>
           </RowContainer>
         </Footer>

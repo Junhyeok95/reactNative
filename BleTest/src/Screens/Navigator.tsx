@@ -8,7 +8,7 @@ import BLE from '~/Screens/BLE';
 import Data from '~/Screens/Data';
 import Connect from '~/Screens/Connect';
 import SplashScreen from 'react-native-splash-screen'
-import LoginBle from '~/Screens/BLE';
+import LoginBle from '~/Screens/LoginBle';
 
 import { Context } from '~/Context/Rasb';
 import Styled from 'styled-components/native';
