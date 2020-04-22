@@ -27,6 +27,9 @@ import Styled from 'styled-components/native';
 // `;
 
 const BleTest = () => {
+  useEffect(() => {
+    console.log("-- BleTest Mount");
+  }, []);
   // // countTest
   // const [count, setCount] = useState<number>(0);
 

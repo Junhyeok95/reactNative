@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Styled from 'styled-components/native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -30,6 +30,11 @@ const ControlButton = Styled.TouchableOpacity`
 `;
 
 const Camera = () => {
+
+  useEffect(() => {
+    console.log("-- Camera Mount");
+  }, []);
+
   return (
     <Container>
       <Icon name="face" color={'#333'} size={400} />

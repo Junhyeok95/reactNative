@@ -8,6 +8,7 @@ type MainFirstStackNavi = {
   Driving: undefined;
   Modal: undefined;
   MapStackNavi: undefined;
+  DeviceStackNavi: undefined;
 };
 
 type MainSecondStackNavi = {

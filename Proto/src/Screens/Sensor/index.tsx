@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Styled from 'styled-components/native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -19,6 +19,11 @@ const Absolute = Styled.View`
 const TouchableOpacity = Styled.TouchableOpacity``;
 
 const Sensor = () => {
+
+  useEffect(() => {
+    console.log("-- Sensor Mount");
+  }, []);
+
   return (
     <Container>
       <Icon name="drive-eta" color={'#333'} size={400} />

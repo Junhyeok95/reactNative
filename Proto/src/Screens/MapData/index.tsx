@@ -40,8 +40,8 @@ const MapData = () => {
   });
 
   useEffect(() => {
-    console.log("Effect, MapDate 여기 윗부분 호출 많이됨");
-
+    console.log("Effect, MapDate 여기 윗부분 호출 많이됨");    
+    console.log("-- Camera Mount");
     if (Platform.OS === 'android') {
       Alert.alert('Google KEY 발급 대기중');
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Dimensions} from 'react-native';
@@ -24,6 +24,14 @@ const DrivingButtonContainer = Styled.View`
 `;
 const ScoreImage = Styled.Image``;
 
+const DeviceButtonContainer = Styled.View`
+  position: absolute;
+  left: 12px;
+  bottom: 24px;
+  padding: 8px 8px;
+  border-radius: 24px;
+`;
+
 type NavigationProp = StackNavigationProp<MainFirstStackNavi, 'Driving'>;
 
 interface Props {
@@ -31,6 +39,14 @@ interface Props {
 }
 
 const Driving = ({navigation}: Props) => {
+
+  const [device, setDevice] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log("---- Main start");
+    console.log("---- 자동 페어링 구현해야함");
+  },[]);
+
   return (
     <Container>
        <ScoreImage
@@ -41,6 +57,18 @@ const Driving = ({navigation}: Props) => {
           resizeMode: 'contain'
         }}
       />
+      <DeviceButtonContainer style={{backgroundColor: device?'#00F':'#555'}}>
+      <ModalButton
+        style={{flex:1}}
+        font={24}
+        color='#FFF'
+        label={device?'페어링':'신호없음'}
+        onPress={() => {
+          setDevice(!device);
+          navigation.navigate('DeviceStackNavi');
+        }}
+      />
+      </DeviceButtonContainer>
       <DrivingButtonContainer>
         <ModalButton
           style={{flex:1}}

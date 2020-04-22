@@ -97,9 +97,10 @@ const MapMarker = () => {
       },
     );
   }, [locations]);
-
-
+  
+  
   useEffect(() => {
+    console.log("-- MapMarker Mount");
     if (Platform.OS === 'android') {
       Alert.alert('Google KEY 발급 대기중');
     }
@@ -111,13 +112,13 @@ const MapMarker = () => {
   },[]); 
 
   let [count, setCount] = useState(0);
-
+  
   useEffect(() => {
-    let id = setInterval(() => {
-      setCount(count + 1);
-      console.log("count",count);
-    }, 1000);
-    return () => clearInterval(id);
+    // let id = setInterval(() => {
+    //   setCount(count + 1);
+    //   console.log("count",count);
+    // }, 1000);
+    // return () => clearInterval(id);
   }, []);
 
   return (Platform.OS === 'ios') ? (

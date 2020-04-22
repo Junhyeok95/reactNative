@@ -55,6 +55,12 @@ interface DrawerProp {
 }
 
 const LoginStackNavi = () => {
+  useEffect(() => {
+    console.log("--- LoginStackNavi useEffect");
+    return () => {
+      console.log(">>> LoginStackNavi WillUnmount");
+    }
+  },[]);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -88,6 +94,12 @@ const LoginStackNavi = () => {
 
 // MainTabNavi ----------------------------------------
 const MainFirstStackNavi = ({navigation}: DrawerProp) => {
+  useEffect(() => {
+    console.log("--- MainFirstStackNavi useEffect");
+    return () => {
+      console.log(">>> MainFirstStackNavi WillUnmount");
+    }
+  },[]);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -127,6 +139,12 @@ const MainFirstStackNavi = ({navigation}: DrawerProp) => {
   );
 };
 const MainSecondStackNavi = ({navigation}: DrawerProp) => {
+  useEffect(() => {
+    console.log("--- MainSecondStackNavi useEffect");
+    return () => {
+      console.log(">>> MainSecondStackNavi WillUnmount");
+    }
+  },[]);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -173,6 +191,12 @@ const MainSecondStackNavi = ({navigation}: DrawerProp) => {
   );
 };
 const MainThirdStackNavi = ({navigation}: DrawerProp) => {
+  useEffect(() => {
+    console.log("--- MainThirdStackNavi useEffect");
+    return () => {
+      console.log(">>> MainThirdStackNavi WillUnmount");
+    }
+  },[]);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -219,6 +243,12 @@ const MainThirdStackNavi = ({navigation}: DrawerProp) => {
   );
 };
 const MainTabNavi = () => {
+  useEffect(() => {
+    console.log("--- MainTabNavi useEffect");
+    return () => {
+      console.log(">>> MainTabNavi WillUnmount");
+    }
+  },[]);
   return (
     <Tab.Navigator tabBarOptions={{activeTintColor: 'black'}}>
       <Tab.Screen
@@ -258,6 +288,12 @@ const MainTabNavi = () => {
 
 // MapStackNavi ----------------------------------------
 const MapMaterialTopTabNavi = () => {
+  useEffect(() => {
+    console.log("--- MapMaterialTopTabNavi useEffect");
+    return () => {
+      console.log(">>> MapMaterialTopTabNavi WillUnmount");
+    }
+  },[]);
   return (
     <MaterailTopTab.Navigator>
       <MaterailTopTab.Screen
@@ -282,6 +318,12 @@ const MapMaterialTopTabNavi = () => {
   );
 };
 const MapStackNavi = ({navigation}: DrawerProp) => {
+  useEffect(() => {
+    console.log("--- MapStackNavi useEffect");
+    return () => {
+      console.log(">>> MapStackNavi WillUnmount");
+    }
+  },[]);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -317,6 +359,12 @@ const MapStackNavi = ({navigation}: DrawerProp) => {
 
 // DeviceStackNavi ----------------------------------------
 const DeviceMaterialTopTabNavi = () => {
+  useEffect(() => {
+    console.log("--- DeviceMaterialTopTabNavi useEffect");
+    return () => {
+      console.log(">>> DeviceMaterialTopTabNavi WillUnmount");
+    }
+  },[]);
   return (
     <MaterailTopTab.Navigator>
       <MaterailTopTab.Screen
@@ -342,6 +390,12 @@ const DeviceMaterialTopTabNavi = () => {
 };
 
 const DeviceStackNavi = ({navigation}: DrawerProp) => {
+  useEffect(() => {
+    console.log("--- DeviceStackNavi useEffect");
+    return () => {
+      console.log(">>> DeviceStackNavi WillUnmount");
+    }
+  },[]);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -392,6 +446,12 @@ const DeviceStackNavi = ({navigation}: DrawerProp) => {
 // };
 
 const DrawNavi = () => {
+  useEffect(() => {
+    console.log("--- DrawNavi useEffect");
+    return () => {
+      console.log(">>> DrawNavi WillUnmount");
+    }
+  },[]);
   // const {logout} = useContext<IUserContext>(UserContext);
 
   return (
@@ -428,6 +488,12 @@ const DrawNavi = () => {
 };
 
 const RootNavi = () => {
+  useEffect(() => {
+    console.log("--- RootNavi useEffect");
+    return () => {
+      console.log(">>> RootNavi WillUnmount");
+    }
+  },[]);
   return (
     <Stack.Navigator>
       <Stack.Screen     
@@ -444,6 +510,12 @@ const RootNavi = () => {
 };
 
 export default () => {
+  useEffect(() => {
+    console.log("--- Navigation useEffect");
+    return () => {
+      console.log(">>> Navigation WillUnmount");
+    }
+  },[]);
   const {userInfo} = useContext<IUserContext>(UserContext);
 
   return (
