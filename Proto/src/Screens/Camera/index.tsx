@@ -44,17 +44,25 @@ const Camera = () => {
         </TouchableOpacity>
       </Absolute>
       <CameraControlContainer>
-        <ControlButton>
-          <Label>왼</Label>
+        <ControlButton onPress={()=>{
+          console.log("H");
+        }}>
+          <Label>H</Label>
         </ControlButton>
-        <ControlButton>
-          <Label>왼</Label>
+        <ControlButton onPress={()=>{
+          console.log("J");
+        }}>
+          <Label>J</Label>
         </ControlButton>
-        <ControlButton>
-          <Label>왼</Label>
+        <ControlButton onPress={()=>{
+          console.log("K");
+        }}>
+          <Label>K</Label>
         </ControlButton>
-        <ControlButton>
-          <Label>왼</Label>
+        <ControlButton onPress={()=>{
+          console.log("L");
+        }}>
+          <Label>L</Label>
         </ControlButton>
       </CameraControlContainer>
     </Container>
