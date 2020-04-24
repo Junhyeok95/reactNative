@@ -34,21 +34,38 @@ const View = Styled.View`
   align-items: center;
 `;
 const Header = Styled.View`
-  height: 30%;
+  height: 20%;
   width: 90%;
-  background-color: #AAA;
+  border: 2px solid #000;
+  margin: 4px;
+  padding: 4px;
+  background-color: #FFF;
+`;
+const HeaderContainer = Styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;`;
+const Body = Styled(FlatList)`
+  width: 80%;
+  margin: 4px;
+  padding: 4px;
+  background-color: #FFF;
 `;
 const Footer = Styled.View`
   width: 90%;
+  margin: 4px;
+  padding: 4px;
   background-color: #AAA;
-`;
-const Body = Styled(FlatList)`
-  width: 90%;
-  background-color: #FFF;
 `;
 const Text = Styled.Text`
   font-size: 16px;
   font-weight: 700;
+  padding-left: 8px;
+`;
+const TextContainer = Styled.Text`
+  borderColor: #000;
+  borderStyle: solid;
+  borderWidth: 1px;
 `;
 const RowContainer = Styled.View`
   flex-direction: row;
@@ -59,7 +76,50 @@ const TouchableHighlight = Styled.TouchableHighlight`
 `;
 const TouchableOpacity = Styled.TouchableOpacity`
 `;
+const Info = Styled.View`
+  width:100%;
+  align-items: center;
+  background-color: #BBF;
+  padding: 16px 8px;
+`;
+const MyLocation = Styled.View`
+  width:100%;
+  margin-bottom: 16px;
+  background-color: #FFF;
+`;
+const Speed_Time = Styled.View`
+  width:100%;
+  margin-bottom: 16px;
+  background-color: #FFF;
+`;
+const EyesScore_Direction = Styled.View`
+  width:100%;
+  margin-bottom: 16px;
+  background-color: #FFF;
+`;
+const Tilt = Styled.View`
+  width:100%;
+  margin-bottom: 16px;
+  background-color: #FFF;
+`;
+const Camera_Mode = Styled.View`
+  width:100%;
+  margin-bottom: 16px;
+  background-color: #FFF;
+`;
+const Sensor_Mode = Styled.View`
+  width:100%;
+  background-color: #FFF;
+`;
+const Label = Styled.View`
+  margin-bottom: 2px;
+`;
 
+
+interface IGeolocation {
+  latitude: number;
+  longitude: number;
+}
 
 const BleTest = () => {
   useEffect(() => {
@@ -70,6 +130,33 @@ const BleTest = () => {
   const [peripherals, setPeripherals] = useState(new Map());
   const [appState, setAppState] = useState<string>(AppState.currentState);
   const [raspId, setRaspId] = useState<string>('');
+
+  const [location, setLocation] = useState<IGeolocation>({
+    // latitude: 35.896311,
+    // longitude: 128.622051
+    latitude: 0,
+    longitude: 0,
+  });
+
+  const [carSpeed, setCarSpeed] = useState<number>(0); // 속도 라이브러리
+  const [drivingTime, setDrivingTime] = useState<number>(0); // 백그라운드 타이머 라이브러리
+  const [drivingState, setDrivingState] = useState<boolean>(false); // 백그라운드 타이머 라이브러리
+
+  const [leftEyeScore, setLeftEyeScore] = useState<number>(0);
+  const [rightEyeScore, setRightEyeScore] = useState<number>(0);
+  const [tracking, setTracking] = useState<string>("OFF");
+
+  const [tiltX, setTiltX] = useState<number>(0);
+  const [tiltY, setTiltY] = useState<number>(0);
+  const [tiltZ, setTiltZ] = useState<number>(0);
+
+  const [cameraX, setCameraX] = useState<number>(0);
+  const [cameraY, setCameraY] = useState<number>(0);
+  const [autoFocus, setAutoFocus] = useState<boolean>(false);
+
+  const [arduinoState, setArduinoState] = useState<boolean>(false);
+  const [reportingTime, setReportingTime] = useState<number>(0);
+  const [shock, setShock] = useState<number>(0);
 
   const RASP_SERVICE_UUID = '13333333-3333-3333-3333-333333333000';
   const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333001';
@@ -119,8 +206,8 @@ const BleTest = () => {
     Geolocation.getCurrentPosition(position => {
       const {latitude, longitude} = position.coords;
       console.log('위치 정보를 가져오는데 성공');
-      console.log(latitude, longitude);
-      Alert.alert('latitude = '+latitude+"\nlongitude = "+longitude);
+      setLocation({latitude, longitude});
+      // Alert.alert('latitude = '+latitude+"\nlongitude = "+longitude);
     },
     error => {  
       console.log('위치 정보를 가져오는데 실패');
@@ -331,19 +418,67 @@ const BleTest = () => {
   return (
     <SafeAreaView>
       <Container>
-        <Text>Hello</Text>
+        <Info>
+          <MyLocation>
+            <Label style={{alignItems: "center"}}>
+              <Text>위치정보 P</Text>
+            </Label>
+              <Text>위도 : {location.latitude}</Text>
+              <Text>경도 : {location.longitude}</Text>
+          </MyLocation>
+          <Speed_Time>
+            <Label style={{alignItems: "center"}}>
+              <Text>차량속도, 주행시간 P</Text>
+            </Label>
+            <Text>속도 : {carSpeed}</Text>
+            <Text>시간 : {drivingTime}</Text>
+          </Speed_Time>
+          <EyesScore_Direction>
+            <Label style={{alignItems: "center"}}>
+              <Text>졸음점수, 방향 R</Text>
+            </Label>
+            <Text> >  좌 : {leftEyeScore}</Text>
+            <Text> >  우 : {rightEyeScore}</Text>
+            <Text> >  방향 : {tracking}</Text>
+          </EyesScore_Direction>
+          <Tilt>
+            <Label style={{alignItems: "center"}}>
+              <Text>차량 기울기 A</Text>
+            </Label>
+            <Text> >  x : {tiltX}</Text>
+            <Text> >  y : {tiltY}</Text>
+            <Text> >  z : {tiltZ}</Text>
+          </Tilt>
+          <Camera_Mode>
+            <Label style={{alignItems: "center"}}>
+              <Text>카메라각도, 초점 A</Text>
+            </Label>
+            <Text>상하 : {cameraX}</Text>
+            <Text>좌우 : {cameraY}</Text>
+            <Text>자동초점 : {autoFocus?"ON":"OFF"}</Text>
+          </Camera_Mode>
+          <Sensor_Mode>
+            <Label style={{alignItems: "center"}}>
+              <Text>아두이노 센서 상태 A</Text>
+            </Label>
+            <Text>온오프 : {arduinoState?"ON":"OFF"}</Text>
+            <Text> >  신고 카운트 : {reportingTime}</Text>
+            <Text> >  차량 충격량 : {shock}</Text>
+          </Sensor_Mode>
+
+        </Info>
       </Container>
       <Container>
         <Header>
-          <View>
-            <Button label={"> "+btnScanTitle} onPress={() => _testStartScan() } />
-          </View>
-          <View>
-            <Button label={"> Ble 재연결"} onPress={() => _testRetrieveConnected() } />
-          </View>
-          <View>
-            <Text style={{fontSize: 16, textAlign: 'center', color: '#333333', padding: 4}}>connect : {raspId?raspId:'NO'}</Text>
-          </View>
+          <HeaderContainer>
+            <Button style={{margin:4}} label={"> "+btnScanTitle} onPress={() => _testStartScan() } />
+          </HeaderContainer>
+          <HeaderContainer>
+            <Button style={{margin:4}} label={"> Ble 재연결"} onPress={() => _testRetrieveConnected() } />
+          </HeaderContainer>
+          <TextContainer>
+            <Text style={{flex:1, fontSize: 20, textAlign: 'center', color: '#333333'}}>connect : {raspId?raspId:'NO'}</Text>
+          </TextContainer>
         </Header>
         <Body
           data={list}
@@ -357,16 +492,57 @@ const BleTest = () => {
         />
         <Footer>
           <RowContainer>
-            <Button style={{margin:2}} label="A" onPress={() => console.log("A") } />
-            <Button style={{margin:2}} label="B" onPress={() => console.log("B") } />
+            <Button style={{margin:2}} label="read" onPress={() => readBtn() } />
+            <Button style={{margin:2}} label="write" onPress={() => writeBtn() } />
           </RowContainer>
           <RowContainer>
-            <Button style={{margin:2}} label="C" onPress={() => console.log("C") } />
-            <Button style={{margin:2}} label="D" onPress={() => console.log("D") } />
+            <Button style={{margin:2}} label={"Phone"+"\n"+"Info"} onPress={() => {
+              getCurrentlocation(); // 위치정보
+              Alert.alert("위치정보, 속도 확인");
+            }} />
+            <Button
+              style={drivingState?{margin:2, backgroundColor:"#0F0"}:{margin:2}} 
+              label={drivingState?"Driving"+"\n"+"end":"Driving"+"\n"+"start"} 
+              onPress={() => {
+                setDrivingState(!drivingState);
+              }
+            } />
           </RowContainer>
           <RowContainer>
-            <Button style={{margin:2}} label="readBtn" onPress={() => readBtn() } />
-            <Button style={{margin:2}} label="writeBtn" onPress={() => writeBtn() } />
+            <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="◀" onPress={() => {
+              setCameraX(cameraX-10);
+            }} />
+            <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="▶" onPress={() => {
+              setCameraX(cameraX+10);
+            }} />
+          </RowContainer>
+          <RowContainer>
+            <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="▼" onPress={() => {
+              setCameraY(cameraY-10);
+            }} />
+            <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="▲" onPress={() => {
+              setCameraY(cameraY+10);
+            }} />
+          </RowContainer>
+          <RowContainer>
+            <Button
+              style={arduinoState?{margin:2, backgroundColor:"#0F0"}:{margin:2}} 
+              label={arduinoState?"Sensor"+"\n"+"On":"Sensor"+"\n"+"Off"}
+              onPress={() => {
+                setArduinoState(!arduinoState);
+              }
+            }/>
+            <Button
+              style={autoFocus?{margin:2, backgroundColor:"#0F0"}:{margin:2}} 
+              label={autoFocus?"Focus"+"\n"+"On":"Focus"+"\n"+"Off"}
+              onPress={() => {
+                setAutoFocus(!autoFocus);
+              }
+            }/>
+          </RowContainer>
+          <RowContainer>
+            <Button style={{margin:2, paddingTop:8, paddingBottom:8}} label="신고" onPress={() => console.log("C") } />
+            <Button style={{margin:2, paddingTop:8, paddingBottom:8}} label="멈춤" onPress={() => console.log("D") } />
           </RowContainer>
         </Footer>
       </Container>

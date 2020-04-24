@@ -47,22 +47,22 @@ const Camera = () => {
         <ControlButton onPress={()=>{
           console.log("H");
         }}>
-          <Label>H</Label>
+          <Label>◀</Label>
         </ControlButton>
         <ControlButton onPress={()=>{
           console.log("J");
         }}>
-          <Label>J</Label>
+          <Label>▼</Label>
         </ControlButton>
         <ControlButton onPress={()=>{
           console.log("K");
         }}>
-          <Label>K</Label>
+          <Label>▲</Label>
         </ControlButton>
         <ControlButton onPress={()=>{
           console.log("L");
         }}>
-          <Label>L</Label>
+          <Label>▶</Label>
         </ControlButton>
       </CameraControlContainer>
     </Container>
