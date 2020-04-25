@@ -34,7 +34,7 @@ const View = Styled.View`
   align-items: center;
 `;
 const Header = Styled.View`
-  height: 20%;
+  height: 27%;
   width: 90%;
   border: 2px solid #000;
   margin: 4px;
@@ -63,6 +63,7 @@ const Text = Styled.Text`
   padding-left: 8px;
 `;
 const TextContainer = Styled.Text`
+  flex: 1;
   borderColor: #000;
   borderStyle: solid;
   borderWidth: 1px;
@@ -81,6 +82,11 @@ const Info = Styled.View`
   align-items: center;
   background-color: #BBF;
   padding: 16px 8px;
+`;
+const MyCnt = Styled.View`
+  width:100%;
+  margin-bottom: 16px;
+  background-color: #FFF;
 `;
 const MyLocation = Styled.View`
   width:100%;
@@ -130,6 +136,8 @@ const BleTest = () => {
   const [peripherals, setPeripherals] = useState(new Map());
   const [appState, setAppState] = useState<string>(AppState.currentState);
   const [raspId, setRaspId] = useState<string>('');
+  
+  const [myCnt, setMyCnt] = useState<number>(-1);
 
   const [location, setLocation] = useState<IGeolocation>({
     // latitude: 35.896311,
@@ -158,12 +166,16 @@ const BleTest = () => {
   const [reportingTime, setReportingTime] = useState<number>(0);
   const [shock, setShock] = useState<number>(0);
 
-  const RASP_SERVICE_UUID = '13333333-3333-3333-3333-333333333000';
-  const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333001';
-  const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333002';
-  const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333003';
+  const RASP_SERVICE_UUID = '13333333-3333-3333-3333-333333330000';
+  const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330001';
+  const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330002';
+  const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330003';
   
   useEffect(() => {
+    console.log("raspId");
+    console.log(raspId);
+    console.log(typeof(raspId));
+
     console.log("BleTest componentDidMount");
     console.log("checkState ->", BleManager.checkState());
     if (Platform.OS === 'android') {
@@ -179,8 +191,13 @@ const BleTest = () => {
     const testHandlerDisconnectedPeripheral = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', _testHandleDisconnectedPeripheral );
     const testHandlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', _testHandleUpdateValueForCharacteristic );
 
+    if (Platform.OS === 'android') {
+      androidPermissionBluetooth();
+      androidPermissionLocation();
+    }
+
     return () => {
-      console.log("BleTest componentWillUnmount");
+      console.log("un ################################");
       testHandlerDiscoverPeripheral.remove();
       testHandlerStop.remove();
       testHandlerDisconnectedPeripheral.remove();
@@ -207,7 +224,7 @@ const BleTest = () => {
       const {latitude, longitude} = position.coords;
       console.log('위치 정보를 가져오는데 성공');
       setLocation({latitude, longitude});
-      // Alert.alert('latitude = '+latitude+"\nlongitude = "+longitude);
+      Alert.alert('latitude = '+latitude+"\nlongitude = "+longitude);
     },
     error => {  
       console.log('위치 정보를 가져오는데 실패');
@@ -271,26 +288,51 @@ const BleTest = () => {
 
   // 3. Emitter addListener 연결 취소 됬을 경우
   const _testHandleDisconnectedPeripheral = (data:any) => {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>> ' + data);
+
     let _peripherals = peripherals;
-    // data 의 peripheral 을 찾아내서 변경
     let _peripheral = _peripherals.get(data.peripheral);
     if (_peripheral) {
       _peripheral.connected = false;
       _peripherals.set(_peripheral.id, _peripheral);
       setPeripherals(new Map(_peripherals));
     }
-    console.log('!!! Disconnected from ' + data.peripheral) + '장치 확인바람';
+    console.log('>>> Disconnected from ' + data.peripheral);
   };
 
   // 4. Emitter addListener 변경
   const _testHandleUpdateValueForCharacteristic = (data:any) => {
-    // 체크하자 value, peripheral, characteristic, service 
-    // console.log('> characteristic / peripheral / service / return value');
     try {
-      if (!data){
-
+      if (data){
+        console.log(data.value);
+        setMyCnt(data.value[0]);
+        /*
+          테스트 규칙
+          0 -> 카운트
+          1 ->
+          2 ->
+          3 ->
+          4 ->
+          5 ->
+          6->
+          7 ->
+          8 ->
+          9 ->
+          10 ->
+          11 ->
+          12 ->
+          13 ->
+          14 ->
+          15 ->
+          16 ->
+          17 ->
+          18 ->
+          19 ->
+          20 ->
+        */
       }
     } catch (error) {
+
     }
   };
 
@@ -340,7 +382,7 @@ const BleTest = () => {
           if (p) {
             p.connected = true;
             _peripherals.set(peripheral.id, p);
-            setPeripherals(new Map(peripherals));
+            setPeripherals(new Map(_peripherals));
           }
           console.log('Connected to ' + peripheral.id); // 연결됨
   
@@ -385,12 +427,13 @@ const BleTest = () => {
   const writeBtn = (data?:any) => {
     if(raspId != ''){
       // // 'B' array
-      const _data = new Uint8Array([1,2,3,4,5,6,7,8,9,10]);
-      BleManager.write(raspId, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, _data)
+      const _data = new Uint8Array([1,2,3,4,5,6,7,8,9]);
+      console.log(typeof(_data));
+      BleManager.write(raspId, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, [0,1,2,3,4,10,10,20,3,4,4])
       .then(() => {
         // Success code
         console.log('write : ');
-        console.log(_data);
+        // console.log(_data);
       })
       .catch((error) => {
         // Failure code
@@ -419,12 +462,15 @@ const BleTest = () => {
     <SafeAreaView>
       <Container>
         <Info>
+          <MyCnt style={{alignItems: "center"}}>
+            <Text>연결상태 : {myCnt}</Text>
+          </MyCnt>
           <MyLocation>
             <Label style={{alignItems: "center"}}>
               <Text>위치정보 P</Text>
             </Label>
-              <Text>위도 : {location.latitude}</Text>
-              <Text>경도 : {location.longitude}</Text>
+              <Text style={{fontSize: 11}}>위도 : {location.latitude}</Text>
+              <Text style={{fontSize: 11}}>경도 : {location.longitude}</Text>
           </MyLocation>
           <Speed_Time>
             <Label style={{alignItems: "center"}}>
@@ -432,6 +478,7 @@ const BleTest = () => {
             </Label>
             <Text>속도 : {carSpeed}</Text>
             <Text>시간 : {drivingTime}</Text>
+            <Text>운전 : {drivingState?"start":"end"}</Text>
           </Speed_Time>
           <EyesScore_Direction>
             <Label style={{alignItems: "center"}}>
@@ -477,7 +524,7 @@ const BleTest = () => {
             <Button style={{margin:4}} label={"> Ble 재연결"} onPress={() => _testRetrieveConnected() } />
           </HeaderContainer>
           <TextContainer>
-            <Text style={{flex:1, fontSize: 20, textAlign: 'center', color: '#333333'}}>connect : {raspId?raspId:'NO'}</Text>
+            <Text style={{flex:1, fontSize: 20, textAlign: 'center', color: '#333333'}}>connect : {raspId==''?'NO ID':raspId}</Text>
           </TextContainer>
         </Header>
         <Body
@@ -498,11 +545,11 @@ const BleTest = () => {
           <RowContainer>
             <Button style={{margin:2}} label={"Phone"+"\n"+"Info"} onPress={() => {
               getCurrentlocation(); // 위치정보
-              Alert.alert("위치정보, 속도 확인");
+              // Alert.alert("위치정보, 속도 확인");
             }} />
             <Button
               style={drivingState?{margin:2, backgroundColor:"#0F0"}:{margin:2}} 
-              label={drivingState?"Driving"+"\n"+"end":"Driving"+"\n"+"start"} 
+              label={drivingState?"Driving"+"\n"+"start":"Driving"+"\n"+"end"} 
               onPress={() => {
                 setDrivingState(!drivingState);
               }
