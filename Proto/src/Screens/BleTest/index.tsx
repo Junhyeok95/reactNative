@@ -7,6 +7,7 @@ import {
 import BleManager from 'react-native-ble-manager';
 import Geolocation from 'react-native-geolocation-service';
 import Button from '~/Components/Button';
+import { stringToBytes } from 'convert-string';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -163,6 +164,7 @@ const BleTest = () => {
   const [autoFocus, setAutoFocus] = useState<boolean>(false);
 
   const [arduinoState, setArduinoState] = useState<boolean>(false);
+  const [isReport, setIsReport] = useState<boolean>(false);
   const [reportingTime, setReportingTime] = useState<number>(0);
   const [shock, setShock] = useState<number>(0);
 
@@ -170,6 +172,8 @@ const BleTest = () => {
   const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330001';
   const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330002';
   const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330003';
+  const RASP_MOVE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330004';
+  const RASP_STATE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333330005';
   
   useEffect(() => {
     console.log("raspId");
@@ -288,8 +292,13 @@ const BleTest = () => {
 
   // 3. Emitter addListener 연결 취소 됬을 경우
   const _testHandleDisconnectedPeripheral = (data:any) => {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>> ' + data);
+    console.log('>>>>>>>>>>>>>>>>>>>>>>> ' + data.peripheral);
 
+    BleManager.stopNotification(data.peripheral, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+      console.log('>> _testHandleDisconnected stopNotification off ' + data.peripheral);
+    }).catch((error) => { // startNotification
+      console.log('>> _testHandleDisconnected fication error', error);
+    });
     let _peripherals = peripherals;
     let _peripheral = _peripherals.get(data.peripheral);
     if (_peripheral) {
@@ -297,6 +306,7 @@ const BleTest = () => {
       _peripherals.set(_peripheral.id, _peripheral);
       setPeripherals(new Map(_peripherals));
     }
+    setRaspId('');
     console.log('>>> Disconnected from ' + data.peripheral);
   };
 
@@ -307,21 +317,21 @@ const BleTest = () => {
         console.log(data.value);
         setMyCnt(data.value[0]);
         /*
-          테스트 규칙
+          임시 테스트 규칙
           0 -> 카운트
-          1 ->
-          2 ->
-          3 ->
-          4 ->
-          5 ->
-          6->
-          7 ->
-          8 ->
-          9 ->
-          10 ->
-          11 ->
-          12 ->
-          13 ->
+          1 -> 왼눈
+          2 -> 오눈
+          3 -> 방향
+          4 -> 기울기 x
+          5 -> y
+          6-> z
+          7 -> 카메라 x
+          8 -> y
+          9 -> 초점
+          10 -> 온오프
+          11 -> 신고 상태
+          12 -> 카운트
+          13 -> 충격량
           14 ->
           15 ->
           16 ->
@@ -367,8 +377,20 @@ const BleTest = () => {
   }
 
   const connectBtn = (peripheral:any) => {
+    // off
+    setArduinoState(false);
+    setCameraX(0);
+    setCameraY(0);
+    setAutoFocus(false);
+    setIsReport(false);
+    // off
     if (peripheral){
       if (peripheral.connected){
+        BleManager.stopNotification(peripheral.id, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+          console.log('### stopNotification off ' + peripheral.id);
+        }).catch((error) => { // startNotification
+          console.log('Notification error', error);
+        });
         BleManager.disconnect(peripheral.id).then(() => {
           setRaspId('');
         })
@@ -425,18 +447,56 @@ const BleTest = () => {
   };
 
   const writeBtn = (data?:any) => {
+    // let bu = Buffer(3); -> node 식
+    // bu.writeInt8(10, 0);
     if(raspId != ''){
-      // // 'B' array
-      const _data = new Uint8Array([1,2,3,4,5,6,7,8,9]);
-      console.log(typeof(_data));
-      BleManager.write(raspId, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, [0,1,2,3,4,10,10,20,3,4,4])
+      // // 'b' array
+      const testData = stringToBytes("0123456789123456789abd45678901234567890123ab");
+      BleManager.write(raspId, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, testData)
       .then(() => {
         // Success code
         console.log('write : ');
-        // console.log(_data);
+        console.log(testData);
       })
       .catch((error) => {
         // Failure code
+        console.log(error);
+      });
+    }
+  };
+
+  const moveBtn = (data?:any) => {
+    /*
+      0 -> H 좌
+      1 -> J 하
+      2 -> K 상
+      3 -> L 우
+    */
+    if(raspId != ''){
+      const _data = stringToBytes(""+data);
+      BleManager.write(raspId, RASP_SERVICE_UUID, RASP_MOVE_CHARACTERISTIC_UUID, _data)
+      .then(() => {
+        console.log('write : '+_data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  };
+
+  const stateBtn = (data?:any) => {
+    /*
+      0 -> Ardu
+      1 -> Focus
+      라즈베리에서 트리거 ... 방법을 모르곘음
+    */
+    if(raspId != ''){
+      const _data = stringToBytes(""+data);
+      BleManager.write(raspId, RASP_SERVICE_UUID, RASP_STATE_CHARACTERISTIC_UUID, _data)
+      .then(() => {
+        console.log('write : '+_data);
+      })
+      .catch((error) => {
         console.log(error);
       });
     }
@@ -478,7 +538,9 @@ const BleTest = () => {
             </Label>
             <Text>속도 : {carSpeed}</Text>
             <Text>시간 : {drivingTime}</Text>
-            <Text>운전 : {drivingState?"start":"end"}</Text>
+            <Text
+              style={drivingState?{color:"#0F0"}:{}}
+            >운전 : {drivingState?"start":"end"}</Text>
           </Speed_Time>
           <EyesScore_Direction>
             <Label style={{alignItems: "center"}}>
@@ -502,13 +564,20 @@ const BleTest = () => {
             </Label>
             <Text>상하 : {cameraX}</Text>
             <Text>좌우 : {cameraY}</Text>
-            <Text>자동초점 : {autoFocus?"ON":"OFF"}</Text>
+            <Text
+              style={autoFocus?{color:"#0F0"}:{}}
+            >자동초점 : {autoFocus?"ON":"OFF"}</Text>
           </Camera_Mode>
           <Sensor_Mode>
             <Label style={{alignItems: "center"}}>
-              <Text>아두이노 센서 상태 A</Text>
+              <Text>아두이노 상태 A</Text>
             </Label>
-            <Text>온오프 : {arduinoState?"ON":"OFF"}</Text>
+            <Text
+              style={arduinoState?{color:"#0F0"}:{}}
+            >온오프 : {arduinoState?"ON":"OFF"}</Text>
+            <Text
+              style={isReport?{color:"#F00"}:{}}
+            > >  신고 상태 : {isReport?"ON":"OFF"}</Text>
             <Text> >  신고 카운트 : {reportingTime}</Text>
             <Text> >  차량 충격량 : {shock}</Text>
           </Sensor_Mode>
@@ -548,7 +617,7 @@ const BleTest = () => {
               // Alert.alert("위치정보, 속도 확인");
             }} />
             <Button
-              style={drivingState?{margin:2, backgroundColor:"#0F0"}:{margin:2}} 
+              style={drivingState?{margin:2, backgroundColor:"#0F0"}:{margin:2}}
               label={drivingState?"Driving"+"\n"+"start":"Driving"+"\n"+"end"} 
               onPress={() => {
                 setDrivingState(!drivingState);
@@ -557,39 +626,88 @@ const BleTest = () => {
           </RowContainer>
           <RowContainer>
             <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="◀" onPress={() => {
-              setCameraX(cameraX-10);
+              if(!arduinoState){
+                Alert.alert("Arduino On 필요");
+              } else {
+                setCameraX(cameraX-10);
+                moveBtn(0);
+              }
             }} />
             <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="▶" onPress={() => {
-              setCameraX(cameraX+10);
+              if(!arduinoState){
+                Alert.alert("Arduino On 필요");
+              } else {
+                setCameraX(cameraX+10);
+                moveBtn(3);
+              }
             }} />
           </RowContainer>
           <RowContainer>
             <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="▼" onPress={() => {
-              setCameraY(cameraY-10);
+              if(!arduinoState){
+                Alert.alert("Arduino On 필요");
+              } else {
+                setCameraY(cameraY-10);
+                moveBtn(1);
+              }
             }} />
             <Button style={{margin:2, paddingTop:4, paddingBottom:4}} label="▲" onPress={() => {
-              setCameraY(cameraY+10);
+              if(!arduinoState){
+                Alert.alert("Arduino On 필요");
+              } else {
+                setCameraY(cameraY+10);
+                moveBtn(2);
+              }
             }} />
           </RowContainer>
           <RowContainer>
             <Button
               style={arduinoState?{margin:2, backgroundColor:"#0F0"}:{margin:2}} 
-              label={arduinoState?"Sensor"+"\n"+"On":"Sensor"+"\n"+"Off"}
+              label={arduinoState?"Ardu"+"\n"+"On":"Ardu"+"\n"+"Off"}
               onPress={() => {
-                setArduinoState(!arduinoState);
+                if(raspId != ''){
+                  setArduinoState(!arduinoState);
+                  if(arduinoState){
+                    setCameraX(0);
+                    setCameraY(0);
+                    setAutoFocus(false);
+                    setIsReport(false);
+                  }
+                  stateBtn(0);
+                } else{
+                  Alert.alert("Arduino On 필요");
+                }
               }
             }/>
             <Button
               style={autoFocus?{margin:2, backgroundColor:"#0F0"}:{margin:2}} 
               label={autoFocus?"Focus"+"\n"+"On":"Focus"+"\n"+"Off"}
               onPress={() => {
-                setAutoFocus(!autoFocus);
+                if(!arduinoState){
+                  Alert.alert("Arduino On 필요");
+                } else{
+                  setAutoFocus(!autoFocus);
+                  stateBtn(1);
+                }
               }
             }/>
           </RowContainer>
           <RowContainer>
-            <Button style={{margin:2, paddingTop:8, paddingBottom:8}} label="신고" onPress={() => console.log("C") } />
-            <Button style={{margin:2, paddingTop:8, paddingBottom:8}} label="멈춤" onPress={() => console.log("D") } />
+            <Button 
+              style={isReport?{margin:2, paddingTop:8, paddingBottom:8, backgroundColor:"#F00"}:{margin:2, paddingTop:8, paddingBottom:8}}
+              label="신고" 
+              onPress={() => {
+                stateBtn(2);
+                setIsReport(true);
+              }}/>
+            <Button
+              style={isReport?{margin:2, paddingTop:8, paddingBottom:8, backgroundColor:"#000"}:{margin:2, paddingTop:8, paddingBottom:8}}
+              color={isReport?"#FFF":"#000"}
+              label="멈춤" 
+              onPress={()  => {
+                stateBtn(3);
+                setIsReport(false);
+              }}/>
           </RowContainer>
         </Footer>
       </Container>

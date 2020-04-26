@@ -54,4 +54,5 @@ npm install --save react-native-geolocation-service react-native-maps
 ```
 npm i --save react-native-ble-manager
 <uses-permission android:name="android.permission.XXX>
+npm install --save convert-string
 ```
