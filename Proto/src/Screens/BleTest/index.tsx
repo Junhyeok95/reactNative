@@ -7,7 +7,7 @@ import {
 import BleManager from 'react-native-ble-manager';
 import Geolocation from 'react-native-geolocation-service';
 import Button from '~/Components/Button';
-import { stringToBytes } from 'convert-string';
+import {stringToBytes} from 'convert-string';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -675,7 +675,7 @@ const BleTest = () => {
                   }
                   stateBtn(0);
                 } else{
-                  Alert.alert("Arduino On 필요");
+                  Alert.alert("Rasp On 필요");
                 }
               }
             }/>

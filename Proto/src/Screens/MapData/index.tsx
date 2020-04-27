@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
-import {KEY} from 'react-native-dotenv'
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {Platform, Alert} from "react-native";
 
@@ -42,14 +41,15 @@ const MapData = () => {
   useEffect(() => {
     console.log("Effect, MapDate 여기 윗부분 호출 많이됨");    
     console.log("-- Camera Mount");
-    if (Platform.OS === 'android') {
-      Alert.alert('Google KEY 발급 대기중');
-    }
+    // if (Platform.OS === 'android') {
+    //   Alert.alert('Google KEY 발급 대기중');
+    // }
   },[]);
 
-  return (Platform.OS === 'ios') ? (
+  return (
     <Container>
       <MapView style={{flex: 1}}
+        provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
@@ -104,10 +104,6 @@ const MapData = () => {
           }}
         />
       </DrivingButtonContainer>
-    </Container>
-  ) : (
-    <Container>
-      {/* <MapView style={{flex: 1}} /> */}
     </Container>
   );
 };

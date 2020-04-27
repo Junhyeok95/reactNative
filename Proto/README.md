@@ -56,3 +56,6 @@ npm i --save react-native-ble-manager
 <uses-permission android:name="android.permission.XXX>
 npm install --save convert-string
 ```
+```
+npm --save install @types/convert-string
+```
