@@ -8,6 +8,7 @@ import BleManager from 'react-native-ble-manager';
 import Geolocation from 'react-native-geolocation-service';
 import Button from '~/Components/Button';
 import {stringToBytes} from 'convert-string';
+import {Buffer} from 'buffer';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -445,22 +446,35 @@ const BleTest = () => {
       });
     }
   };
-
+  const buf = Buffer.allocUnsafe(5);
+  buf.writeUInt8(1,0);
+  buf.writeUInt8(200,1);
+  buf.writeUInt8(255,2);
+  console.log(buf);
+  
+  const testData22 = stringToBytes("0123");
+  console.log(testData22);
+  
   const writeBtn = (data?:any) => {
     // let bu = Buffer(3); -> node 식
     // bu.writeInt8(10, 0);
     if(raspId != ''){
       // // 'b' array
-      const testData = stringToBytes("0123456789123456789abd45678901234567890123ab");
+      const testData = stringToBytes("00001111");
+      const test = [2,2,2,2,3,3,-1]
+
       BleManager.write(raspId, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, testData)
       .then(() => {
-        // Success code
-        console.log('write : ');
-        console.log(testData);
+          BleManager.write(raspId, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, test)
+          .then(() => {
+            // Success code
+          })
+          .catch((error) => {
+            // Failure code
+            console.log(error);
+          });
       })
       .catch((error) => {
-        // Failure code
-        console.log(error);
       });
     }
   };

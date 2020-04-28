@@ -41,6 +41,7 @@ import Camera from './Camera';
 import Sensor from './Sensor';
 
 import CustomDrawer from '~/Screens/Drawer';
+import SplashScreen from 'react-native-splash-screen'
 
 const TestContainer = () => { return (<></>); }
 
@@ -96,6 +97,7 @@ const LoginStackNavi = () => {
 const MainFirstStackNavi = ({navigation}: DrawerProp) => {
   useEffect(() => {
     console.log("--- MainFirstStackNavi useEffect");
+    SplashScreen.hide();
     return () => {
       console.log(">>> MainFirstStackNavi WillUnmount");
     }
@@ -193,6 +195,7 @@ const MainSecondStackNavi = ({navigation}: DrawerProp) => {
 const MainThirdStackNavi = ({navigation}: DrawerProp) => {
   useEffect(() => {
     console.log("--- MainThirdStackNavi useEffect");
+    SplashScreen.hide();
     return () => {
       console.log(">>> MainThirdStackNavi WillUnmount");
     }
@@ -290,6 +293,7 @@ const MainTabNavi = () => {
 const MapMaterialTopTabNavi = () => {
   useEffect(() => {
     console.log("--- MapMaterialTopTabNavi useEffect");
+    SplashScreen.hide();
     return () => {
       console.log(">>> MapMaterialTopTabNavi WillUnmount");
     }
@@ -513,6 +517,7 @@ export default () => {
   useEffect(() => {
     console.log("--- Navigation useEffect");
     return () => {
+      SplashScreen.hide();
       console.log(">>> Navigation WillUnmount");
     }
   },[]);

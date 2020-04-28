@@ -16,7 +16,7 @@ react-native unlink react-native-gesture-handler / pod install
 ```
 # NPM
 watchman watch-del-all
-npm cache clean
+npm cache clean --force
 cd android && ./gradlew clean
 ```
 
@@ -40,6 +40,7 @@ npm install --save @react-native-community/async-storage
 npm install --save react-native-vector-icons
 npm install --save-dev @types/react-native-vector-icons // self connection
 ```
+### Deprecated [generator-rn-toolbox, imagemagick]
 ```
 npm install -g yo generator-rn-toolbox
 brew install imagemagick
@@ -58,4 +59,12 @@ npm install --save convert-string
 ```
 ```
 npm --save install @types/convert-string
+yarn add buffer
+```
+### new icon, splash
+```
+npm install --save react-native-splash-screen
+npm install --save-dev @bam.tech/react-native-make
+react-native set-splash --path ./src/Assets/Images/splash.png --resize center --background "#FFFFFF" // 1024 png
+react-native set-icon --path ./src/Assets/Images/icon.png --background "#FFFFFF" // 3000 png
 ```

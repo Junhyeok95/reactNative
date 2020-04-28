@@ -22,10 +22,10 @@ interface IGeolocation {
 const MapMarker = () => {
 
   const [locations, setLocations] = useState<Array<ILocation>>([]);
-  const [location, setLocation] = useState<IGeolocation>({
-    latitude: 35.896311,
-    longitude: 128.622051,
-  });
+  // const [location, setLocation] = useState<IGeolocation>({
+  //   latitude: 35.896311,
+  //   longitude: 128.622051,
+  // });
 
   let _watchId: number;
 
@@ -65,13 +65,15 @@ const MapMarker = () => {
 
   return (
     <Container>
-      {locations.length > 0 && (
+      {/* {locations.length > 0 && ( */}
         <MapView
           style={{flex: 1}}
           provider={PROVIDER_GOOGLE}
           initialRegion={{
-            latitude: locations[0].latitude,
-            longitude: locations[0].longitude,
+            // latitude: locations[0].latitude,
+            // longitude: locations[0].longitude,
+            latitude: 35.896311,
+            longitude: 128.622051,
             latitudeDelta: 0.0800,
             longitudeDelta: 0.0400,
           }}>
@@ -85,7 +87,7 @@ const MapMarker = () => {
             />
           ))}
         </MapView>
-      )}
+      {/* )} */}
     </Container>
   );
 };
