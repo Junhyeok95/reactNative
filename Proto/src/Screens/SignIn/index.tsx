@@ -9,6 +9,7 @@ import Input from '~/Components/Input';
 //https://oblador.github.io/react-native-vector-icons/
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Platform} from 'react-native';
+import SplashScreen from 'react-native-splash-screen'
 
 const TouchableWithoutFeedback = Styled.TouchableWithoutFeedback``;
 const Container = Styled.KeyboardAvoidingView`
@@ -54,6 +55,7 @@ import {Keyboard} from "react-native";
 
 const SignIn = ({navigation}: Props) => {
   const {login} = useContext<IUserContext>(UserContext);
+  SplashScreen.hide();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

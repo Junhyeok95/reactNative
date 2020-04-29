@@ -40,7 +40,7 @@ const MapMarker = () => {
       },
       {
         enableHighAccuracy: true,
-        distanceFilter: 10,
+        distanceFilter: 5,
         interval: 3000,
       },
     );

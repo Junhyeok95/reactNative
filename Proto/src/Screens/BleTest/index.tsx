@@ -196,11 +196,6 @@ const BleTest = () => {
     const testHandlerDisconnectedPeripheral = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', _testHandleDisconnectedPeripheral );
     const testHandlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', _testHandleUpdateValueForCharacteristic );
 
-    if (Platform.OS === 'android') {
-      androidPermissionBluetooth();
-      androidPermissionLocation();
-    }
-
     return () => {
       console.log("un ################################");
       testHandlerDiscoverPeripheral.remove();
