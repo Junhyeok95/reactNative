@@ -23,7 +23,7 @@ const App = ({ }: Props) => {
 
   useEffect(() => {
     console.log("App.tsx useEffect");
-    SplashScreen.hide();
+    setTimeout(() => SplashScreen.hide(), 1000);
   }, []);
 
   return (

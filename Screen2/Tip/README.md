@@ -4,20 +4,10 @@
 <key>NSBluetoothAlwaysUsageDescription</key> // add this line
 <string>permissions</string> // add this line
 
-# geolocation / maps    Android
-react-native link react-native-maps
-
-
-
 
 # vicon / splash    ios   /ios/__/AppDelegate.m
 [RNSplashScreen show]; // add this line
 return YES;
-
-# vicon / splash    Android
-react-native link react-native-splash-screen
-
-
 
 
 # vector-icons    ios   /ios/__/Info.plist

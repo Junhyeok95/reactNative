@@ -21,7 +21,7 @@ npm i -S react-native-splash-screen
 ### storage / geolocation / maps
 ```
 npm i -S @react-native-community/async-storage
-npm i -S react-native-geolocation-service react-native-maps
+npm i -S @react-native-community/geolocation react-native-maps
 ```
 
 ### navigation / vector
