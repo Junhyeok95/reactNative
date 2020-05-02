@@ -16,3 +16,6 @@ npm i -S @react-navigation/material-bottom-tabs react-native-paper
 npm i -S react-native-vector-icons
 npm i -D @types/react-native-vector-icons
 ```
+```
+npm i -S react-native-maps react-native-ble-manager
+```

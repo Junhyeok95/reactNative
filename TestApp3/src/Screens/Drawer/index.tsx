@@ -11,20 +11,20 @@ import {
 import {UserContext} from '~/Contexts/User';
 import {TouchableHighlight} from "react-native";
 
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+
 const Header = Styled.View`
   border-bottom-width: 1px;
   border-color: #D3D3D3;
-  padding: 8px 16px;
-`;
-const Title = Styled.Text``;
-const ButtonContainer = Styled.View`
-  flex-direction: row;
   align-items: center;
+  justify-content: center;
+`;
+const Text = Styled.Text`
+  margin: 8px;
+  font-size: 32px;
 `;
 const Footer = Styled.View`
-  width: 100%;
   border-top-width: 1px;
-  padding: 8px 16px;
   border-color: #D3D3D3;
 `;
 
@@ -35,24 +35,30 @@ interface Props {
 const Drawer = ({props}: Props) => {
   const {logout} = useContext<IUserContext>(UserContext);
   return (
-    <DrawerContentScrollView {...props}>
-      <Header>
-        <Title>User ID</Title>
-      </Header>
-      <DrawerItemList {...props} />
-      <Footer>
-        <TouchableHighlight
-          activeOpacity={0.6}
-          underlayColor="#DDDDDD"
-          onPress={() => {
-            logout();
-          }}>
-          <ButtonContainer>
-            <Title>로그아웃</Title>
-          </ButtonContainer>
-        </TouchableHighlight>
-      </Footer>
-    </DrawerContentScrollView>
+    <>
+      <DrawerContentScrollView {...props}>
+        <Header>
+          <Text>User ID</Text>
+        </Header>
+        <DrawerItemList {...props} />
+        <Footer>
+          <DrawerItem
+            icon={({ }) => (
+              <Icon
+                style={{margin:0, padding:0}}
+                name="logout"
+                color={'#000000'}
+                size={24}
+              />
+            )}
+            label="로그아웃"
+            onPress={() => {
+              logout();
+            }}
+          />
+        </Footer>
+      </DrawerContentScrollView>
+    </>
   );
 };
 
