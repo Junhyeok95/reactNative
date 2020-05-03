@@ -29,9 +29,9 @@ const TouchableHighlight = Styled.TouchableHighlight``;
 
 const Text = Styled.Text`
   padding: 8px;
-  margin: 8px;
+  margin: 4px;
   background-color: #EEE;
-  border: 5px;
+  border: 1px;
   border-radius: 10px;
   border-color: #00F;
   font-size: 24px;
@@ -96,15 +96,20 @@ const List = ({  }: Props) => {
   const [pitch, setPitch] = useState<number>(0); // 끄덕끄덕
   const [yaw, setYaw] = useState<number>(0); // 도리도리
 
-  const RASP_SERVICE_UUID = '13333333-3333-3333-3333-333333333300';
-  const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333301';
-  const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333302';
-  const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333303';
+  const RASP_SERVICE_UUID = '13333333-3333-3333-3333-000000000000';
+  const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-000000000001';
+  const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-000000000002';
+  const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-000000000003';
 
   useEffect(()=>{
 
     console.log('> List useEffect');
     console.log("checkState ->", BleManager.checkState());
+
+    if (Platform.OS === 'android') {
+      androidPermissionBluetooth();
+      androidPermissionLocation();
+    }
 
     AppState.addEventListener("change", HandleAppStateChange);
     BleManager.start({showAlert: false}); // StartOptions 가능, showAlert->ios
@@ -114,20 +119,13 @@ const List = ({  }: Props) => {
     const HandlerDisconnectedPeripheral = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', HandleDisconnectedPeripheral );
     const HandlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', HandleUpdateValueForCharacteristic );
 
-    if (Platform.OS === 'android') {
-      androidPermissionBluetooth();
-      androidPermissionLocation();
-    }
-
     return() => {
-      // AppState
-      AppState.removeEventListener("change", HandleAppStateChange);
       HandlerDiscoverPeripheral.remove();
       HandlerStop.remove();
       HandlerDisconnectedPeripheral.remove();
       HandlerUpdate.remove();
+      AppState.removeEventListener("change", HandleAppStateChange);
     };
-
   }, []);
 
   ////////// ////////// ////////// ////////// //////////
@@ -135,10 +133,12 @@ const List = ({  }: Props) => {
   // 0. 화면 전환
   const HandleAppStateChange = (nextAppState:any) => {
     if (appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('> App has come to the foreground!')
-      console.log('! _RetrieveConnected() Start')
+      console.log('> App has come to the foreground!');
       // point
-      _RetrieveConnected();
+      // _RetrieveConnected();
+      BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
+        console.log('!!! !!! Connected peripherals: ' + peripheralsArray.length);
+      });
     }
     setAppState(nextAppState);
   };
@@ -162,24 +162,17 @@ const List = ({  }: Props) => {
 
   // 3. Emitter addListener 연결 취소 됬을 경우
   const HandleDisconnectedPeripheral = (data:any) => {
-    console.log('disconnect Test2');
-
+    setRaspId('');
+    console.log('> disconnect 2');
     console.log('> 연결 취소 : ' + data.peripheral);
-    // startNotification
-    // BleManager.stopNotification(data.peripheral, "SERVICE_UUID", "NOTIFY_CHARACTERISTIC_UUID").then(() => {
-    //   console.log('> stopNotification ' + data.peripheral);
-    // }).catch((error) => { // startNotification
-    //   console.log('> stopNotification error', error);
-    // });
 
-    // let _peripherals = peripherals;
-    // let _peripheral = _peripherals.get(data.peripheral);
-    // if (_peripheral) {
-    //   _peripheral.connected = false;
-    //   _peripherals.set(_peripheral.id, _peripheral);
-    //   setPeripherals(new Map(_peripherals));
-    // }
-    console.log('> Disconnected from ' + data.peripheral);
+    let _peripherals = peripherals;
+    let _peripheral = _peripherals.get(data.peripheral);
+    if (_peripheral) {
+      _peripheral.connected = false;
+      _peripherals.set(_peripheral.id, _peripheral);
+      setPeripherals(new Map(_peripherals));
+    }
   };
 
   // 4. Emitter addListener 변경
@@ -220,7 +213,7 @@ const List = ({  }: Props) => {
   const _Scan = () => {
     if (!scanning) {
       // 기본 장치 값 초기화
-      setPeripherals( new Map() );
+      // setPeripherals( new Map() );
       BleManager.scan([], 2, false).then((results) => {
         setScanning(true);
         console.log('> Scanning ...');
@@ -232,11 +225,8 @@ const List = ({  }: Props) => {
     BleManager.getConnectedPeripherals([]).then((results) => {
       if (results.length == 0) {
         console.log('> No connected peripherals');
-        console.log('! _Scan Start');
-        _Scan();
       }
-
-      console.log("> connected peripherals List");
+      console.log(results[0].id);
       let _peripherals = peripherals;
       for (let i = 0; i < results.length; i++) {
         let _peripheral = results[i];
@@ -251,13 +241,10 @@ const List = ({  }: Props) => {
     if (peripheral){
       if (peripheral.connected){
         setRaspId('');
-        BleManager.disconnect(peripheral.id).then(() => {
-          console.log('disconnect Test1');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        BleManager.disconnect(peripheral.id);
+        console.log('> disconnect 1');
       } else {
+
         BleManager.connect(peripheral.id).then(() => {
           let _peripherals = peripherals;
           let p = peripherals.get(peripheral.id);
@@ -266,28 +253,28 @@ const List = ({  }: Props) => {
             _peripherals.set(peripheral.id, p);
             setPeripherals(new Map(_peripherals));
           }
-          setRaspId(peripheral.id); // 연결된 장치의 상세한 값 검색
+          setRaspId(peripheral.id);
           console.log('> Connected to ' + peripheral.id);
-  
-          setTimeout(() => { // 1 setTimeout
+
+          setTimeout(() => {
             BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
-              console.log("# retrieveServices, Connected peripheralInfo");
+              console.log("### retrieveServices");
               console.log(peripheralInfo);
 
-              // setTimeout(() => { // 2 setTimeout
-              //   BleManager.startNotification(peripheral.id, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
-              //     console.log('### Started notification on ' + peripheral.id);
-              //   }).catch((error) => { // startNotification
-              //     console.log('Notification error', error);
-              //   });
-              // }, 300);
-
+              setTimeout(() => { // 2 setTimeout
+                BleManager.startNotification(peripheral.id, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+                  console.log('### Started notification on ' + peripheral.id);
+                }).catch((error) => { // startNotification
+                  console.log('Notification error', error);
+                });
+              }, 300); // 2 setTimeout
             });
-          }, 500);
+          }, 900);
 
         }).catch((error) => {
           console.log('> Connection error', error);
         });
+
       }
     }
   };
@@ -297,7 +284,7 @@ const List = ({  }: Props) => {
     const color = item.connected ? '#00BFFF' : '#F5FFFA';
     return (
       <TouchableHighlight onPress={() => { _connectBtn(item) }}>
-        <View style={{margin: 10, backgroundColor: color}}>
+        <View style={{margin: 8, backgroundColor: color}}>
           <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 4}}>{item.name}</Text>
           <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 2}}>{item.id}</Text>
         </View>
@@ -311,7 +298,7 @@ const List = ({  }: Props) => {
   return (
     <Container>
       <Toggle />
-      <Subtitle title = 'Device List' btnLabel={btnScanTitle} onPress={_Scan} />
+      <Subtitle title = {'Device List ->'+raspId} btnLabel={btnScanTitle} onPress={_Scan} />
       <FlatListContainer
         keyExtractor={( item, index ):any => {
           return `key-${index}`;
@@ -322,35 +309,96 @@ const List = ({  }: Props) => {
       />
       <ButtonContainer>
         <Button
-          style={{ flex: 1}}
+          style={{ flex: 1 }}
+          label="clear"
+          onPress={() => {
+            setPeripherals( new Map() );
+          }}  
+        />
+        <Button
+          style={{ flex: 1 }}
+          label="x"
+          onPress={() => {
+          }}  
+        />
+        <Button
+          style={{ flex: 1 }}
+          label={"notify"+"\n"+"start"}
+          onPress={() => {
+
+            BleManager.startNotification(raspId, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+              console.log('### Started notification on ' + raspId);
+            }).catch((error) => { // startNotification
+              console.log('> startNotification error', error);
+            });
+
+          }}
+        />
+        <Button
+          style={{ flex: 1 }}
+          label={"notify"+"\n"+"stop"}
+          onPress={() => {
+
+            BleManager.stopNotification(raspId, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+              console.log('> stopNotification ' + raspId);
+            }).catch((error) => { // stopNotification
+              console.log('> stopNotification error', error);
+            });
+
+          }}  
+        />
+      </ButtonContainer>
+      <ButtonContainer>
+        <Button
+          style={{ flex: 1 }}
+          label="Connected"
+          onPress={() => {
+            _RetrieveConnected();
+            console.log("id");
+          }}  
+        />
+        <Button
+          style={{ flex: 1 }}
+          label="Info"
+          onPress={() => {
+            BleManager.retrieveServices(raspId).then((peripheralInfo) => {
+              console.log("### retrieveServices");
+              console.log(peripheralInfo);
+            });
+          }}  
+        />
+        <Button
+          style={{ flex: 1 }}
           label="read"
           onPress={() => {
             BleManager.read(raspId, RASP_SERVICE_UUID, RASP_READ_CHARACTERISTIC_UUID)
             .then((readData) => {
-              // Success code
               console.log('Read : ');
               console.log(readData);
               // console.log('Read: ' + readData[1]);
             })
             .catch((error) => {
-              // Failure code
               console.log(error);
             });
 
           }}
         />
         <Button
-          style={{ flex: 1}}
-          label="notify"
-          onPress={() => {
-            
-          }}  
-        />
-        <Button
-          style={{ flex: 1}}
+          style={{ flex: 1 }}
           label="wirte"
           onPress={() => {
-            
+            if(raspId != ''){
+              // // 'b' array
+              const test = [2,2,2,2,3,3,-1];
+              BleManager.write(raspId, RASP_SERVICE_UUID, RASP_WRITE_CHARACTERISTIC_UUID, test)
+              .then(() => {
+                // Success code
+              })
+              .catch((error) => {
+                // Failure code
+                console.log(error);
+              });
+            }
           }}  
         />
       </ButtonContainer>
