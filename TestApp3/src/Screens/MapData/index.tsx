@@ -91,7 +91,10 @@ const MapData = ({navigation}: DrawerProp) => {
       // console.log(now.getSeconds());
       setTime(now.getHours()+" : "+now.getMinutes()+" : "+now.getSeconds());
     }, 1000);
-    return () => clearInterval(id);
+    return () => {
+      console.log("--- --- MapData return");
+      clearInterval(id);
+    };
   },[]);
 
   return (
@@ -155,7 +158,7 @@ const MapData = ({navigation}: DrawerProp) => {
         <Text>고도 altitude : {coordinate.altitude.toFixed(4)}</Text>
         <Text>위도 latitude : {coordinate.latitude.toFixed(4)}</Text>
         <Text>경도 longitude : {coordinate.longitude.toFixed(4)}</Text>
-        <Text>speed : {coordinate.speed.toFixed(2)}</Text>
+        <Text>속도 speed : {coordinate.speed.toFixed(2)}</Text>
         <Text>----- timestamp -----</Text>
         <Text>{coordinate.timestamp}</Text>
       </RightView>

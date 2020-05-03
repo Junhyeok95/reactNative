@@ -16,6 +16,9 @@ npm i -S @react-navigation/material-bottom-tabs react-native-paper
 npm i -S react-native-vector-icons
 npm i -D @types/react-native-vector-icons
 ```
+### maps, ble, buffer
 ```
 npm i -S react-native-maps react-native-ble-manager
+yarn add buffer
+// KEY, permission
 ```

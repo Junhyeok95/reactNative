@@ -10,6 +10,8 @@ import Toggle from '~/Screens/Bluetooth/List/Toggle';
 import Subtitle from '~/Screens/Bluetooth/List/Subtitle';
 
 import BleManager from 'react-native-ble-manager';
+import {Buffer} from 'buffer';
+import Button from '~/Components/Button';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -34,6 +36,11 @@ const Text = Styled.Text`
   border-color: #00F;
   font-size: 24px;
   text-align: center;
+`;
+
+const ButtonContainer = Styled.View`
+  flex-direction: row;
+  height: 10%;
 `;
 
 interface Props {}
@@ -81,14 +88,27 @@ const List = ({  }: Props) => {
   const [scanning, setScanning] = useState<boolean>(false);
   const [peripherals, setPeripherals] = useState(new Map());
   const [appState, setAppState] = useState<string>(AppState.currentState);
+
   const [raspId, setRaspId] = useState<string>('');
   const [blueToothEnable, setBlueToothEnable] = useState<boolean>(false);
+
+  const [roll, setRoll] = useState<number>(0); // 갸웃갸웃
+  const [pitch, setPitch] = useState<number>(0); // 끄덕끄덕
+  const [yaw, setYaw] = useState<number>(0); // 도리도리
+
+  const RASP_SERVICE_UUID = '13333333-3333-3333-3333-333333333300';
+  const RASP_NOTIFY_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333301';
+  const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333302';
+  const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-333333333303';
 
   useEffect(()=>{
 
     console.log('> List useEffect');
+    console.log("checkState ->", BleManager.checkState());
 
     AppState.addEventListener("change", HandleAppStateChange);
+    BleManager.start({showAlert: false}); // StartOptions 가능, showAlert->ios
+
     const HandlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', HandleDiscoverPeripheral );
     const HandlerStop = bleManagerEmitter.addListener('BleManagerStopScan', HandleStopScan );
     const HandlerDisconnectedPeripheral = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', HandleDisconnectedPeripheral );
@@ -101,7 +121,7 @@ const List = ({  }: Props) => {
 
     return() => {
       // AppState
-      // AppState.removeEventListener("change", HandleAppStateChange);
+      AppState.removeEventListener("change", HandleAppStateChange);
       HandlerDiscoverPeripheral.remove();
       HandlerStop.remove();
       HandlerDisconnectedPeripheral.remove();
@@ -136,7 +156,7 @@ const List = ({  }: Props) => {
 
   // 2. Emitter addListener 장치 검색 취소 BleManagerStopScan 중지되면 실행
   const HandleStopScan = () => {
-    console.log('> 장치 검색 중지');
+    console.log('> Scanning Stop');
     setScanning(false);
   };
 
@@ -152,13 +172,13 @@ const List = ({  }: Props) => {
     //   console.log('> stopNotification error', error);
     // });
 
-    let _peripherals = peripherals;
-    let _peripheral = _peripherals.get(data.peripheral);
-    if (_peripheral) {
-      _peripheral.connected = false;
-      _peripherals.set(_peripheral.id, _peripheral);
-      setPeripherals(new Map(_peripherals));
-    }
+    // let _peripherals = peripherals;
+    // let _peripheral = _peripherals.get(data.peripheral);
+    // if (_peripheral) {
+    //   _peripheral.connected = false;
+    //   _peripherals.set(_peripheral.id, _peripheral);
+    //   setPeripherals(new Map(_peripherals));
+    // }
     console.log('> Disconnected from ' + data.peripheral);
   };
 
@@ -201,7 +221,7 @@ const List = ({  }: Props) => {
     if (!scanning) {
       // 기본 장치 값 초기화
       setPeripherals( new Map() );
-      BleManager.scan([], 2, true).then((results) => {
+      BleManager.scan([], 2, false).then((results) => {
         setScanning(true);
         console.log('> Scanning ...');
       });
@@ -227,9 +247,10 @@ const List = ({  }: Props) => {
     });
   }
 
-  const connectBtn = (peripheral:any) => {
+  const _connectBtn = (peripheral:any) => {
     if (peripheral){
       if (peripheral.connected){
+        setRaspId('');
         BleManager.disconnect(peripheral.id).then(() => {
           console.log('disconnect Test1');
         })
@@ -245,11 +266,11 @@ const List = ({  }: Props) => {
             _peripherals.set(peripheral.id, p);
             setPeripherals(new Map(_peripherals));
           }
+          setRaspId(peripheral.id); // 연결된 장치의 상세한 값 검색
           console.log('> Connected to ' + peripheral.id);
   
           setTimeout(() => { // 1 setTimeout
             BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
-              // Connected peripheralInfo
               console.log("# retrieveServices, Connected peripheralInfo");
               console.log(peripheralInfo);
 
@@ -275,7 +296,7 @@ const List = ({  }: Props) => {
   const renderItem = ({ item, index }:any) => {
     const color = item.connected ? '#00BFFF' : '#F5FFFA';
     return (
-      <TouchableHighlight onPress={() => { connectBtn(item) }}>
+      <TouchableHighlight onPress={() => { _connectBtn(item) }}>
         <View style={{margin: 10, backgroundColor: color}}>
           <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 4}}>{item.name}</Text>
           <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 2}}>{item.id}</Text>
@@ -299,6 +320,40 @@ const List = ({  }: Props) => {
         ListEmptyComponent={renderEmpty} // data 배열이 없을 경우 표시되는 컴포넌트
         renderItem={renderItem}
       />
+      <ButtonContainer>
+        <Button
+          style={{ flex: 1}}
+          label="read"
+          onPress={() => {
+            BleManager.read(raspId, RASP_SERVICE_UUID, RASP_READ_CHARACTERISTIC_UUID)
+            .then((readData) => {
+              // Success code
+              console.log('Read : ');
+              console.log(readData);
+              // console.log('Read: ' + readData[1]);
+            })
+            .catch((error) => {
+              // Failure code
+              console.log(error);
+            });
+
+          }}
+        />
+        <Button
+          style={{ flex: 1}}
+          label="notify"
+          onPress={() => {
+            
+          }}  
+        />
+        <Button
+          style={{ flex: 1}}
+          label="wirte"
+          onPress={() => {
+            
+          }}  
+        />
+      </ButtonContainer>
     </Container>
   );
 };
