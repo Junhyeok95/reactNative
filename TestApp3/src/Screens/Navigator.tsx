@@ -87,6 +87,7 @@ const MainFirstStackNavi = ({navigation}: DrawerProp) => {
         },
         headerRight: () => (
           <IconButton
+            style={{marginRight:8}}
             icon="menu"
             color="black"
             onPress={() => navigation.openDrawer()}
@@ -120,6 +121,7 @@ const MainSecondStackNavi = ({navigation}: DrawerProp) => {
         },
         headerRight: () => (
           <IconButton
+            style={{marginRight:8}}
             icon="menu"
             color="black"
             onPress={() => navigation.openDrawer()}
@@ -160,6 +162,7 @@ const MainThirdStackNavi = ({navigation}: DrawerProp) => {
         },
         headerRight: () => (
           <IconButton
+            style={{marginRight:8}}
             icon="menu"
             color="black"
             onPress={() => navigation.openDrawer()}
@@ -193,6 +196,7 @@ const MainFourthStackNavi = ({navigation}: DrawerProp) => {
         },
         headerRight: () => (
           <IconButton
+            style={{marginRight:8}}
             icon="menu"
             color="black"
             onPress={() => navigation.openDrawer()}

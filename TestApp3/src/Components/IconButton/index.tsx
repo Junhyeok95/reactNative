@@ -7,9 +7,6 @@ const Container = Styled.TouchableOpacity`
   width: 100%;
   justify-content: center;
   align-items: center;
-  background-color: #FFFFFF;
-  border-width: 1px;
-  border-color: #000000;
 `;
 
 interface Props {
@@ -22,7 +19,7 @@ interface Props {
 const IconButton = ({icon, style, color, onPress}: Props) => {
   return (
     <Container style={style} onPress={onPress}>
-      <Icon name={icon} color={color ? color : 'white'} size={24} />
+      <Icon name={icon} color={color ? color : 'white'} size={32} />
     </Container>
   );
 };

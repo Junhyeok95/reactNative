@@ -11,7 +11,7 @@ const Container = Styled.View`
 const Bluetooth = () => {
 
   useEffect(() => {
-    console.log("--- --- Bluetooth Mount");
+    console.log("--- --- Bluetooth");
   }, []);
 
   return (

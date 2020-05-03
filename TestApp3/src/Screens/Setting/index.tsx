@@ -45,7 +45,7 @@ interface Props {
 
 const Setting = ({navigation}: Props) => {
   useEffect(() => {
-    console.log("--- --- Profile");
+    console.log("--- --- Setting");
   },[]);
   return (
     <Container>
