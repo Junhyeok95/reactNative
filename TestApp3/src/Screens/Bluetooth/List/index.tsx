@@ -43,6 +43,28 @@ const ButtonContainer = Styled.View`
   height: 10%;
 `;
 
+const DataContainer = Styled.View`
+  background-color: #0F0;
+  height: 8%;
+`;
+
+const URI = '';
+
+const json = async () => {
+  try {
+    let response = await fetch(URI);
+    console.log("1");
+    // console.log("response", response);
+    let responseJsonData = await response.json();
+    console.log("2");
+    console.log("responseJsonData", responseJsonData);
+    console.log("3");
+    return responseJsonData;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 interface Props {}
 
 const List = ({  }: Props) => {
@@ -101,7 +123,13 @@ const List = ({  }: Props) => {
   const RASP_READ_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-000000000002';
   const RASP_WRITE_CHARACTERISTIC_UUID = '13333333-3333-3333-3333-000000000003';
 
+  const [restring, setRestring] = useState<string>("x");
+
   useEffect(()=>{
+
+    // let id = setInterval(() => {
+    //   json();
+    // }, 1000);
 
     console.log('> List useEffect');
     console.log("checkState ->", BleManager.checkState());
@@ -120,6 +148,9 @@ const List = ({  }: Props) => {
     const HandlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', HandleUpdateValueForCharacteristic );
 
     return() => {
+
+      // clearInterval(id);
+
       HandlerDiscoverPeripheral.remove();
       HandlerStop.remove();
       HandlerDisconnectedPeripheral.remove();
@@ -180,6 +211,8 @@ const List = ({  }: Props) => {
     try {
       if (data){
         console.log(data.value);
+        let str = JSON.stringify(data.value);
+        setRestring(str);
         /*
           임시 테스트 규칙
           0 -> 카운트
@@ -261,13 +294,14 @@ const List = ({  }: Props) => {
               console.log("### retrieveServices");
               console.log(peripheralInfo);
 
-              setTimeout(() => { // 2 setTimeout
-                BleManager.startNotification(peripheral.id, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
-                  console.log('### Started notification on ' + peripheral.id);
-                }).catch((error) => { // startNotification
-                  console.log('Notification error', error);
-                });
-              }, 300); // 2 setTimeout
+              // setTimeout(() => { // 2 setTimeout
+              //   BleManager.startNotification(peripheral.id, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+              //     console.log('### Started notification on ' + peripheral.id);
+              //   }).catch((error) => { // startNotification
+              //     console.log('Notification error', error);
+              //   });
+              // }, 300); // 2 setTimeout
+
             });
           }, 900);
 
@@ -317,8 +351,13 @@ const List = ({  }: Props) => {
         />
         <Button
           style={{ flex: 1 }}
-          label="x"
+          label="url"
           onPress={() => {
+            try {
+              // json();
+            } catch (error) {
+              
+            }
           }}  
         />
         <Button
@@ -402,6 +441,9 @@ const List = ({  }: Props) => {
           }}  
         />
       </ButtonContainer>
+      <DataContainer>
+        <Text>{restring}</Text>
+      </DataContainer>
     </Container>
   );
 };
