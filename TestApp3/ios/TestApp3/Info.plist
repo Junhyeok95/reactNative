@@ -39,8 +39,12 @@
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>react-native-permissions</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Used to Location&apos;Maps</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to Location&apos;Maps</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>react-native-permissions</string>
+	<string>Used to Location&apos;Maps</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

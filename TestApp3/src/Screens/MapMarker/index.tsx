@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker, Polyline} from 'react-native-maps';
 import {Platform, Alert, FlatList} from "react-native";
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerActions} from '@react-navigation/native';
@@ -17,16 +17,45 @@ const Footer = Styled.View`
   border: 1px;
 `;
 
+interface IGeolocation {
+  latitude: number;
+  longitude: number;
+}
+
 type TypeDrawerProp = DrawerNavigationProp<DrawNaviParamList, 'MainTabNavi'>;
 interface DrawerProp {
   navigation: TypeDrawerProp;
 }
 
+
+
 const MapMarker = ({navigation}: DrawerProp) => {
   const [markerList, setMarkerList] = useState<Array<String>>(["1","2","3","4","5","6","7","8"]);
+  const [location, setLocation] = useState<IGeolocation>({
+    latitude: 35.896311,
+    longitude: 128.622051,
+  });
+  const [locations, setLocations] = useState<Array<IGeolocation>>([]);
+
+  const saveLocations = require('./saveLocations.json');
+  // console.log('---------------------------------------');
+  // const [coords, ...list] = saveLocations;
+  // console.log(coords);
+
 
   useEffect(() => {
     console.log("--- --- MapMarker Mount");
+    let arr = [];
+    for(let i=0; i<saveLocations.length; i++){
+      let coords = saveLocations[i].coords;
+      arr.push(coords);
+      console.log(arr);
+    }
+    console.log(arr);
+    setLocations(arr);
+    console.log("locations");
+    console.log(locations);
+
     return () => {
 
     }
@@ -40,12 +69,17 @@ const MapMarker = ({navigation}: DrawerProp) => {
         loadingEnabled={true}
         showsUserLocation={true}
         initialRegion={{
-          latitude: 35.896311,
-          longitude: 128.622051,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.03,
+          longitudeDelta: 0.03,
         }}
       >
+        <Polyline
+          coordinates={locations}
+          strokeWidth={3}
+          strokeColor="#00f" 
+        />
       </MapView>
       <IconButton
         style={{position:"absolute", top:60, right:24, width:50, height:50, backgroundColor:"#FFFFFF", borderWidth:3, borderRadius:30, paddingTop:2}}
