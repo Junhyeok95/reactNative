@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import React, {Fragment, useEffect} from 'react';
 import Styled from 'styled-components/native';
 import {UserContextProvider} from '~/Contexts/User';
+import {DrivingDataProvider} from '~/Contexts/DrivingData';
 import Navigator from '~/Screens/Navigator';
 
 interface Props {}
@@ -15,7 +16,9 @@ const App = ({ }: Props) => {
   return (
     <Fragment>
       <UserContextProvider>
-        <Navigator />
+        <DrivingDataProvider>
+          <Navigator />
+        </DrivingDataProvider>
       </UserContextProvider>
     </Fragment>
   );

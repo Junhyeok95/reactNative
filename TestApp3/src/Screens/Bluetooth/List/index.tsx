@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
 
 import {
@@ -12,6 +12,8 @@ import Subtitle from '~/Screens/Bluetooth/List/Subtitle';
 import BleManager from 'react-native-ble-manager';
 import {Buffer} from 'buffer';
 import Button from '~/Components/Button';
+
+import {DrivingDataContext} from '~/Contexts/DrivingData';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -107,6 +109,8 @@ const List = ({  }: Props) => {
 
   ////////// ////////// ////////// ////////// //////////
 
+  const {testArr, testFun} = useContext(DrivingDataContext);
+
   const [scanning, setScanning] = useState<boolean>(false);
   const [peripherals, setPeripherals] = useState(new Map());
   const [appState, setAppState] = useState<string>(AppState.currentState);
@@ -125,14 +129,13 @@ const List = ({  }: Props) => {
 
   const [restring, setRestring] = useState<string>("x");
 
-  useEffect(()=>{
 
+  useEffect(()=>{
     // let id = setInterval(() => {
     //   json();
     // }, 1000);
 
     console.log('> List useEffect');
-    console.log("checkState ->", BleManager.checkState());
 
     if (Platform.OS === 'android') {
       androidPermissionBluetooth();
@@ -206,36 +209,68 @@ const List = ({  }: Props) => {
     }
   };
 
+  
+  let myarr = [0, 0,0, 0,0, 0,0 ];
+    // 카운트 , 왼눈 뜬, 오른 뜬 , 왼눈 감, 오눈 감 , 시선체크, 시선미체크
+    // 3-왼눈 4-오눈 5-시선
+
   // 4. Emitter addListener 변경
   const HandleUpdateValueForCharacteristic = (data:any) => {
     try {
       if (data){
+
+        console.log("context Test");
+
         console.log(data.value);
+        let updateArrCheck = data.value;
+        myarr[0] += 1
+        if(updateArrCheck[3] == 1){
+          myarr[1] += 1
+        }
+        if(updateArrCheck[3] == 2){
+          myarr[3] += 1
+        }
+        if(updateArrCheck[4] == 1){
+          myarr[2] += 1
+        }
+        if(updateArrCheck[4] == 2){
+          myarr[4] += 1
+        }
+        if(updateArrCheck[5] > 5){
+          myarr[5] += 1
+        }
+        if(updateArrCheck[5] < 5){
+          myarr[6] += 1
+        }
+        console.log(myarr);
+
+
         let str = JSON.stringify(data.value);
         setRestring(str);
+
+        let arr = testArr;
+        for(let i = 0 ; i < arr.length ; i++){
+          arr[i] = data.value[i]
+        }
+        // testFun(arr); // 저장
+        
+        // console.log(arr);
+        // console.log("context Test");
+
+
         /*
           임시 테스트 규칙
-          0 -> 카운트
-          1 -> 왼눈
-          2 -> 오눈
-          3 -> 방향
-          4 -> 기울기 x
-          5 -> y
-          6-> z
-          7 -> 카메라 x
-          8 -> y
-          9 -> 초점
-          10 -> 온오프
-          11 -> 신고 상태
-          12 -> 카운트
-          13 -> 충격량
-          14 ->
-          15 ->
-          16 ->
-          17 ->
-          18 ->
-          19 ->
-          20 ->
+          0 ->
+          1 ->
+          2 ->
+          3 ->
+          4 ->
+          5 ->
+          6 ->
+          7 ->
+          8 ->
+          9 ->
+          10 ->
         */
       }
     } catch (error) {
@@ -273,6 +308,11 @@ const List = ({  }: Props) => {
   const _connectBtn = (peripheral:any) => {
     if (peripheral){
       if (peripheral.connected){
+        // BleManager.stopNotification(raspId, RASP_SERVICE_UUID, RASP_NOTIFY_CHARACTERISTIC_UUID).then(() => {
+        //   console.log('> stopNotification ' + raspId);
+        // }).catch((error) => { // stopNotification
+        //   console.log('> stopNotification error', error);
+        // });
         setRaspId('');
         BleManager.disconnect(peripheral.id);
         console.log('> disconnect 1');
@@ -287,7 +327,7 @@ const List = ({  }: Props) => {
             setPeripherals(new Map(_peripherals));
           }
           setRaspId(peripheral.id);
-          console.log('> Connected to ' + peripheral.id);
+          console.log('###### Connected to ' + peripheral.id);
 
           setTimeout(() => {
             BleManager.retrieveServices(peripheral.id).then((peripheralInfo) => {
@@ -303,7 +343,7 @@ const List = ({  }: Props) => {
               // }, 300); // 2 setTimeout
 
             });
-          }, 900);
+          }, 500);
 
         }).catch((error) => {
           console.log('> Connection error', error);

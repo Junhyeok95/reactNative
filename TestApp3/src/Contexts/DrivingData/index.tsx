@@ -7,15 +7,26 @@ interface Props { // cache 유저 있을 경우에 기록 뭉치를 부름
 }
 
 interface IDrivingData {
-  test1: boolean,
+  drivingSaveData: Array<IDrivingSaveData>,
+  defaultInfo: Array<number>,
+  linkInfo: Array<number>,
+  checkInfo: Array<number>,
+  testArr: Array<number>
+  testFun: (data: any) => void,
+  drivingSave: (data?: IDrivingSaveData) => void,
 }
 
 const DrivingDataContext = createContext<IDrivingData>({ // 초기값
-  test1: true,
+  drivingSaveData: [],
+  defaultInfo: [],
+  linkInfo: [],
+  checkInfo: [],
+  testArr: [],
+  testFun: (data: any) => {},
+  drivingSave: (data?: IDrivingSaveData) => {},
 });
 
-const DrivingDataProvider = ({cache, children}: Props) => {
-  const test1 = false;
+const DrivingDataProvider = ({cache, children}: Props) => { // 선언하면 이걸로 초기화됨
 
   const [drivingSaveData, setDrivingSaveData] = useState<Array<IDrivingSaveData>>([]); // 따로두면 시간,라인,마커 관계힘듬
   // 휴대폰 기본 확인 정보
@@ -23,10 +34,24 @@ const DrivingDataProvider = ({cache, children}: Props) => {
   const [defaultInfo, setDefaultInfo] = useState<Array<number>>([0,0,0,0,0,0]); 
   // 라즈베리 + 아두이노 정보 -> 10개
   // [ 신고상태, 롤, 피치, 요, 시선방향, 좌눈, 우눈, 화면size , 좌표x, 좌표y ] // 화면, 좌표는 1/3 된 값
-  const [linkInfo, setLinkInfo] = useState<Array<number>>([]);
+  const [linkInfo, setLinkInfo] = useState<Array<number>>([0,0,0,0,0, 0,0,0,0,0]);
   // 토탈 체크 정보 -> 10개
   // [ 신고상태, 신고카운트, 가속상태, 가속횟수, 감속상태, 감속횟수, 졸음상태, 졸음횟수, 운전시작, 운전종료 ]
-  const [checkInfo, setCheckInfo] = useState<Array<number>>([]);
+  const [checkInfo, setCheckInfo] = useState<Array<number>>([0,0,0,0,0, 0,0,0,0,0]);
+
+  // 테스트 -> [카운트, 스크린x, 스크린y, 눈, 눈, 시선]
+  const [testArr, setTestArr] = useState<Array<number>>([0,0,0,0,0]);
+
+  // console.log("          !!!!!!!!!!!!!!!!!! testArr Test");
+  // console.log(typeof(testArr));
+  // console.log(Array.isArray(testArr));
+  // console.log("          !!!!!!!!!!!!!!!!!! testArr Test");
+
+
+  const testFun = (data:any) :void => {
+    setTestArr(data);
+    console.log("testFun 으로 데이타 저장 성공");
+  }
 
   const getCacheData = async (key: string) => { // 활용해서 운전기록뭉치 (날짜 : {기록 : {위도, 경도} , 포인트 : {내용}  })
     const cacheData = await AsyncStorage.getItem(key);
@@ -42,25 +67,41 @@ const DrivingDataProvider = ({cache, children}: Props) => {
     AsyncStorage.setItem(key, JSON.stringify(data));
   };
 
+  // 초기값 
   const setDrivingList = async () => { // 운전기록뭉치
     const cachedData = await getCacheData('DrivingList');
     if (cachedData) { // 기록이 있으면 가저옴
       setDrivingSaveData(cachedData);
       return;
     } else {
-        console.log("x cachedData -> setDrivingList()");
+        console.log('x cachedData -> setDrivingList()');
       return;
     }
   };
 
+  // 운전 기록 후 setDraving, 그 뒤 캐시값으로 던지기
+  const drivingSave = async (data?:IDrivingSaveData) => {
+    console.log('drivingSave');
+
+    // setDrivingSaveData([...drivingSaveData, {name:"", webUserId:"", time:0, Drivingline:[],DrivingMarker:[]}]);
+
+    // setCachedData('DrivingList', drivingSaveData);
+  }
+
   useEffect(() => {
-    setDrivingList();
+    setDrivingList(); // 리스트 호출
   }, []);
 
   return (
     <DrivingDataContext.Provider
       value={{
-        test1
+        drivingSaveData,
+        defaultInfo,
+        linkInfo,
+        checkInfo,
+        testArr,
+        drivingSave,
+        testFun,
       }}>
       {children}
     </DrivingDataContext.Provider>

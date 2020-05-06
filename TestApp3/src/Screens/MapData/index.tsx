@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
 import MapView, {PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
 import {Platform, Alert} from "react-native";
@@ -7,6 +7,8 @@ import {DrawerActions} from '@react-navigation/native';
 
 import IconButton from '~/Components/IconButton';
 import Button from '~/Components/Button';
+
+import {DrivingDataContext} from '~/Contexts/DrivingData';
 
 const RightView = Styled.View`
   position: absolute;
@@ -24,7 +26,7 @@ const LeftView = Styled.View`
   position: absolute;
   background-color: #0F0C;
   width: 75px;
-  height: 75px;
+  height: 125px;
   left: 24px;
   bottom: 24px;
   border: 1px;
@@ -34,7 +36,7 @@ const TopView = Styled.View`
   position: absolute;
   background-color: #0F0C;
   width: 200px;
-  height: 50px;
+  height: 200px;
   top:60px;
   left: 24px;
   border: 1px;
@@ -62,6 +64,9 @@ interface DrawerProp {
 }
 
 const MapData = ({navigation}: DrawerProp) => {
+
+  const {testArr, testFun} = useContext(DrivingDataContext);
+  const [testDrawer, setTestDrawer] = useState<Array<number>>([]);
 
   const [driving, setDriving] = useState<boolean>(false);
   const [device, setDevice] = useState<boolean>(false);
@@ -164,17 +169,29 @@ const MapData = ({navigation}: DrawerProp) => {
       </RightView>
       <LeftView>
         <Button
+          label="보기"
+          style={{backgroundColor:"#FFF", marginBottom:8}}
+          onPress={()=>{
+        }}/>
+        <Button
+          label="기록"
+          style={{backgroundColor:"#FFF", marginBottom:8}}
+          onPress={()=>{
+        }}/>
+        <Button
           label={device?"start\n"+" on":"start\n"+" off"}
           style={{backgroundColor:"#FFF"}}
           onPress={()=>{
             setDevice(!device);
         }}/>
+        
       </LeftView>
       <TopView>
         <Text 
           style={{flex:1, padding:8, backgroundColor:"#FFF"}}
         >
           Time      {time}
+          {"\n"}testArr /  {"cnt "+testDrawer[0]+" 좌 "+testDrawer[3]+" 우 "+testDrawer[4]}
         </Text>
       </TopView>
     </>
