@@ -1,12 +1,16 @@
 import React, {useContext, useState, useEffect} from 'react';
 import Styled from 'styled-components/native';
 import MapView, {PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
-import {Platform, Alert} from "react-native";
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerActions} from '@react-navigation/native';
 
 import IconButton from '~/Components/IconButton';
 import Button from '~/Components/Button';
+
+import {
+  FlatList, Platform, Alert,
+  PermissionsAndroid, AppState,
+  NativeModules, NativeEventEmitter,} from 'react-native';
 
 import {DrivingDataContext} from '~/Contexts/DrivingData';
 
@@ -15,7 +19,6 @@ const RightView = Styled.View`
   background-color: #0F0C;
   overflow: hidden;
   width: 200px;
-  height: 200px;
   right: 24px;
   bottom: 24px;
   border: 1px;
@@ -36,7 +39,7 @@ const TopView = Styled.View`
   position: absolute;
   background-color: #0F0C;
   width: 200px;
-  height: 200px;
+  height: 100px;
   top:60px;
   left: 24px;
   border: 1px;
@@ -65,6 +68,27 @@ interface DrawerProp {
 
 const MapData = ({navigation}: DrawerProp) => {
 
+  // 안드로이드 위치권한 요청
+  const androidPermissionLocation = () => {
+    if (Platform.OS === 'android' && Platform.Version >= 23) {
+      PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => { // check
+        if (result) {
+          console.log("android LOCATION check OK");
+        } else {
+          PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => { // request
+            if (result) {
+              console.log("android LOCATION request Ok");
+            } else {
+              console.log("android LOCATION reject");
+            }
+          });
+        }
+      });
+    } else if (Platform.OS === 'ios') {
+      Alert.alert('PermissionLocation, Android only');
+    }
+  };
+
   const {testArr, testFun} = useContext(DrivingDataContext);
   const [testDrawer, setTestDrawer] = useState<Array<number>>([]);
 
@@ -75,10 +99,10 @@ const MapData = ({navigation}: DrawerProp) => {
   const [time, setTime] = useState<any>();
 
   const [coordinate, setCoordinate] = useState<ICoordinate>({
-    altitude: 0,
-    latitude: 0,
-    longitude: 0,
-    speed: 0,
+    altitude: 0.0000,
+    latitude: 0.0000,
+    longitude: 0.0000,
+    speed: 0.0000,
     timestamp: 0, // Milliseconds since Unix epoch
   });
   
@@ -88,6 +112,7 @@ const MapData = ({navigation}: DrawerProp) => {
   });
 
   useEffect(() => {
+    androidPermissionLocation();
     console.log("--- --- MapData Mount");
     let id = setInterval(() => {
       let now = new Date();
@@ -102,17 +127,38 @@ const MapData = ({navigation}: DrawerProp) => {
     };
   },[]);
 
+
+// interface ICoordinate {
+//   altitude: number;
+//   latitude: number;
+//   longitude: number;
+//   speed: number;
+//   timestamp: number;
+// }
+
   return (
     <>
-      <MapView style={{flex: 1}}
+      <MapView
         provider={PROVIDER_GOOGLE}
+        style={{flex: 1}}
         loadingEnabled={true}
+
         showsUserLocation={true}
+        userLocationAnnotationTitle={" 필요합니다 "}
+        showsMyLocationButton={true}
+        showsPointsOfInterest={true}
+        showsCompass={true}
+        showsScale={true}
+        showsBuildings={true}
+        showsTraffic={true}
+        showsIndoors={true}
+        showsIndoorLevelPicker={true}
+
         initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.01,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
         }}
         onRegionChange={region => {
           setLocation({
@@ -126,29 +172,16 @@ const MapData = ({navigation}: DrawerProp) => {
             longitude: region.longitude,
           });
         }}
-        onUserLocationChange={e => { // EventUserLocation
-          if(device){
-            setCoordinate({
-              altitude: e.nativeEvent.coordinate.altitude,
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude,
-              speed: e.nativeEvent.coordinate.speed,
-              timestamp: e.nativeEvent.coordinate.timestamp,
-            });
-            // isFromMockProvider 모의 위치 차단
-          }
+        onUserLocationChange={ e => {
+          setCoordinate({
+            altitude: e.nativeEvent.coordinate.altitude,
+            latitude: e.nativeEvent.coordinate.latitude,
+            longitude: e.nativeEvent.coordinate.longitude,
+            speed: e.nativeEvent.coordinate.speed,
+            timestamp: e.nativeEvent.coordinate.timestamp,
+          });
         }}
       >
-        <Marker
-          coordinate={{latitude: 35.896311, longitude: 128.622051}}
-          title="영진 전문 대학교"
-          description="this is example"
-        />
-        <Marker
-          coordinate={{latitude: location.latitude, longitude: location.longitude}}
-          title="Test Maker"
-          description="Test"
-        />
       </MapView>
       <IconButton
         style={{position:"absolute", top:60, right:24, width:50, height:50, backgroundColor:"#0008", borderRadius:30, paddingTop:2}}
@@ -157,9 +190,6 @@ const MapData = ({navigation}: DrawerProp) => {
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
       <RightView>
-        <Text>latitude : {location.latitude.toFixed(4)}</Text>
-        <Text>longitude : {location.longitude.toFixed(4)}</Text>
-        <Text>----- ----- -----</Text>
         <Text>고도 altitude : {coordinate.altitude.toFixed(4)}</Text>
         <Text>위도 latitude : {coordinate.latitude.toFixed(4)}</Text>
         <Text>경도 longitude : {coordinate.longitude.toFixed(4)}</Text>
@@ -168,7 +198,7 @@ const MapData = ({navigation}: DrawerProp) => {
         <Text>{coordinate.timestamp}</Text>
       </RightView>
       <LeftView>
-        <Button
+        {/* <Button
           label="보기"
           style={{backgroundColor:"#FFF", marginBottom:8}}
           onPress={()=>{
@@ -177,7 +207,7 @@ const MapData = ({navigation}: DrawerProp) => {
           label="기록"
           style={{backgroundColor:"#FFF", marginBottom:8}}
           onPress={()=>{
-        }}/>
+        }}/> */}
         <Button
           label={device?"start\n"+" on":"start\n"+" off"}
           style={{backgroundColor:"#FFF"}}

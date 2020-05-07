@@ -31,13 +31,13 @@ const DrivingDataProvider = ({cache, children}: Props) => { // 선언하면 이�
   const [drivingSaveData, setDrivingSaveData] = useState<Array<IDrivingSaveData>>([]); // 따로두면 시간,라인,마커 관계힘듬
   // 휴대폰 기본 확인 정보
   // [ 속도, 위도, 경도, 링크상태, 운전상태, 날짜 ] -> 6개
-  const [defaultInfo, setDefaultInfo] = useState<Array<number>>([0,0,0,0,0,0]); 
-  // 라즈베리 + 아두이노 정보 -> 10개
-  // [ 신고상태, 롤, 피치, 요, 시선방향, 좌눈, 우눈, 화면size , 좌표x, 좌표y ] // 화면, 좌표는 1/3 된 값
-  const [linkInfo, setLinkInfo] = useState<Array<number>>([0,0,0,0,0, 0,0,0,0,0]);
+  const [defaultInfo, setDefaultInfo] = useState<Array<number>>([-1,-1,-1,-1,-1,-1]);
+  // 라즈베리 + 아두이노 정보 -> 14개
+  // [ 신고버튼상태, 롤, 피치, 요, 시선방향, 좌눈, 우눈, 화면x, 화면y, 왼좌표x, 왼좌표y, 우좌표x, 우좌표y , 카운터 ] // 화면, 좌표는 1/3 된 값
+  const [linkInfo, setLinkInfo] = useState<Array<number>>([-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1 ,-1]);
   // 토탈 체크 정보 -> 10개
-  // [ 신고상태, 신고카운트, 가속상태, 가속횟수, 감속상태, 감속횟수, 졸음상태, 졸음횟수, 운전시작, 운전종료 ]
-  const [checkInfo, setCheckInfo] = useState<Array<number>>([0,0,0,0,0, 0,0,0,0,0]);
+  // [ 운전시작, 운전종료, 사고상태, 신고접수카운트, 가속상태, 가속횟수, 감속상태, 감속횟수, 졸음상태, 졸음횟수 ]
+  const [checkInfo, setCheckInfo] = useState<Array<number>>([-1,-1,-1,-1, -1,-1,-1,-1,-1,-1]);
 
   // 테스트 -> [카운트, 스크린x, 스크린y, 눈, 눈, 시선]
   const [testArr, setTestArr] = useState<Array<number>>([0,0,0,0,0]);

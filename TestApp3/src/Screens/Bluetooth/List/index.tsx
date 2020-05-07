@@ -46,8 +46,16 @@ const ButtonContainer = Styled.View`
 `;
 
 const DataContainer = Styled.View`
-  background-color: #0F0;
+  background-color: #00F;
   height: 8%;
+  margin: 6px;
+`;
+const TestText = Styled.Text`
+  margin: 2px;
+  text-align: center;
+  background-color: #FFF;
+  font-size: 32px;
+  flex:1;
 `;
 
 const URI = '';
@@ -222,36 +230,36 @@ const List = ({  }: Props) => {
         console.log("context Test");
 
         console.log(data.value);
-        let updateArrCheck = data.value;
-        myarr[0] += 1
-        if(updateArrCheck[3] == 1){
-          myarr[1] += 1
-        }
-        if(updateArrCheck[3] == 2){
-          myarr[3] += 1
-        }
-        if(updateArrCheck[4] == 1){
-          myarr[2] += 1
-        }
-        if(updateArrCheck[4] == 2){
-          myarr[4] += 1
-        }
-        if(updateArrCheck[5] > 5){
-          myarr[5] += 1
-        }
-        if(updateArrCheck[5] < 5){
-          myarr[6] += 1
-        }
-        console.log(myarr);
+        // let updateArrCheck = data.value;
+        // myarr[0] += 1
+        // if(updateArrCheck[3] == 1){
+        //   myarr[1] += 1
+        // }
+        // if(updateArrCheck[3] == 2){
+        //   myarr[3] += 1
+        // }
+        // if(updateArrCheck[4] == 1){
+        //   myarr[2] += 1
+        // }
+        // if(updateArrCheck[4] == 2){
+        //   myarr[4] += 1
+        // }
+        // if(updateArrCheck[5] > 5){
+        //   myarr[5] += 1
+        // }
+        // if(updateArrCheck[5] < 5){
+        //   myarr[6] += 1
+        // }
+        // console.log(myarr);
 
 
         let str = JSON.stringify(data.value);
         setRestring(str);
 
-        let arr = testArr;
-        for(let i = 0 ; i < arr.length ; i++){
-          arr[i] = data.value[i]
-        }
+        // let arr = testArr;
+        // for(let i = 0 ; i < arr.length ; i++){
+        //   arr[i] = data.value[i]
+        // }
         // testFun(arr); // 저장
         
         // console.log(arr);
@@ -482,7 +490,7 @@ const List = ({  }: Props) => {
         />
       </ButtonContainer>
       <DataContainer>
-        <Text>{restring}</Text>
+        <TestText>{restring}</TestText>
       </DataContainer>
     </Container>
   );
