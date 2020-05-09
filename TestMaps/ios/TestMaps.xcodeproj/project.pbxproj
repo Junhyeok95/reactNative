@@ -18,6 +18,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* TestMapsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TestMapsTests.m */; };
+		407E75E8246690A20053AD59 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407E75E7246690A20053AD59 /* MapKit.framework */; };
 		42332894D24FBEA64C138AEC /* libPods-TestMaps-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9363A3B9C5CAFDD9A1663BBB /* libPods-TestMaps-tvOS.a */; };
 		61C2B02BF99CF6592DA2BA10 /* libPods-TestMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F444565961D154E9F328A7 /* libPods-TestMaps.a */; };
 /* End PBXBuildFile section */
@@ -56,6 +57,8 @@
 		2D02E47B1E0B4A5D006451C7 /* TestMaps-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestMaps-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* TestMaps-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestMaps-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DF28E9D40DC6501A2C1A6C5 /* Pods-TestMaps-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestMaps-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-TestMaps-tvOS/Pods-TestMaps-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		407E75E7246690A20053AD59 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		407E75E9246690BB0053AD59 /* TestMaps.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TestMaps.entitlements; path = TestMaps/TestMaps.entitlements; sourceTree = "<group>"; };
 		574440873FF74821439027A4 /* Pods-TestMaps-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestMaps-tvOS.release.xcconfig"; path = "Target Support Files/Pods-TestMaps-tvOS/Pods-TestMaps-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		9363A3B9C5CAFDD9A1663BBB /* libPods-TestMaps-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TestMaps-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAD8F697A2B6B0A4F0718ECC /* Pods-TestMaps-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestMaps-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-TestMaps-tvOSTests/Pods-TestMaps-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -82,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				407E75E8246690A20053AD59 /* MapKit.framework in Frameworks */,
 				61C2B02BF99CF6592DA2BA10 /* libPods-TestMaps.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +129,7 @@
 		13B07FAE1A68108700A75B9A /* TestMaps */ = {
 			isa = PBXGroup;
 			children = (
+				407E75E9246690BB0053AD59 /* TestMaps.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -139,6 +144,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				407E75E7246690A20053AD59 /* MapKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				12F444565961D154E9F328A7 /* libPods-TestMaps.a */,
@@ -161,7 +167,6 @@
 				DB354508D4543AC558BA6FE5 /* Pods-TestMaps-tvOSTests.debug.xcconfig */,
 				AAD8F697A2B6B0A4F0718ECC /* Pods-TestMaps-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -294,6 +299,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 489338LU32;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -667,7 +673,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TestMaps/TestMaps.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 489338LU32;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -680,7 +688,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.TestMapsA;
 				PRODUCT_NAME = TestMaps;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -694,7 +702,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = TestMaps/TestMaps.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 489338LU32;
 				INFOPLIST_FILE = TestMaps/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -702,7 +712,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.TestMapsA;
 				PRODUCT_NAME = TestMaps;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
