@@ -18,7 +18,8 @@ npm i -D @types/react-native-vector-icons
 ```
 ### maps, ble, buffer
 ```
-npm i -S react-native-maps react-native-ble-manager
-yarn add buffer
-// KEY, permission
+npm i -E react-native-maps
+npm i -S react-native-ble-manager
+npm i -S lottie-react-native
+npm i -S lottie-ios@3.1.3
 ```

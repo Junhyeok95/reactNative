@@ -16,6 +16,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* TestApp3Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TestApp3Tests.m */; };
+		40136CAD246722CA00535761 /* mapv2.json in Resources */ = {isa = PBXBuildFile; fileRef = 40136CAC246722CA00535761 /* mapv2.json */; };
 		40D88765245F031D00F35C79 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40D88764245F031D00F35C79 /* MapKit.framework */; };
 		533D0424733CDFF15130466B /* libPods-TestApp3-TestApp3Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76135B92A456E52CD32D85DE /* libPods-TestApp3-TestApp3Tests.a */; };
 		A608FCA53E25000B6E5EFC47 /* libPods-TestApp3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EC6D6CB739CB6F16DA563FF9 /* libPods-TestApp3.a */; };
@@ -59,6 +60,7 @@
 		2D02E4901E0B4A5D006451C7 /* TestApp3-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestApp3-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30754ACC87B42977B3C5C2BE /* Pods-TestApp3-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestApp3-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-TestApp3-tvOSTests/Pods-TestApp3-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		3FAB0BC38E9C69540B492E7C /* Pods-TestApp3.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestApp3.debug.xcconfig"; path = "Target Support Files/Pods-TestApp3/Pods-TestApp3.debug.xcconfig"; sourceTree = "<group>"; };
+		40136CAC246722CA00535761 /* mapv2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = mapv2.json; path = ../src/Assets/Images/mapv2.json; sourceTree = "<group>"; };
 		4048B026245CD27C003DFEEC /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		4048B027245CD27C003DFEEC /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
 		4048B028245CD27C003DFEEC /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -169,6 +171,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		40136CAB2467228800535761 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				40136CAC246722CA00535761 /* mapv2.json */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		4048B015245CD1FE003DFEEC /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,6 +227,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				40136CAB2467228800535761 /* Resources */,
 				4048B015245CD1FE003DFEEC /* Fonts */,
 				13B07FAE1A68108700A75B9A /* TestApp3 */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -385,6 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				40136CAD246722CA00535761 /* mapv2.json in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
