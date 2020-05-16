@@ -7,3 +7,12 @@ npm install react-native-maps --save-exact
 ```
 npm i -S @react-native-community/geolocation react-native-geolocation-service
 ```
+###  icon, splash
+```
+npm i -S react-native-splash-screen
+npm i -D @bam.tech/react-native-make
+```
+###  status-bar-height, splash
+```
+npm i -S react-native-status-bar-height react-native-iphone-x-helper
+```
